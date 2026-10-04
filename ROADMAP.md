@@ -13,7 +13,7 @@ Markets, instruments, exchanges, orders, positions, P&L; discretionary vs system
 ## Stage 1 — Data and measurement
 
 ### Lesson 1 — Market data, returns and research environment
-OHLCV, bid/ask concept, bars/ticks, timeframes, timestamps/timezones, adjusted prices, missing/duplicate data, simple vs log returns.
+OHLCV, bid/ask concept, bars/ticks, timeframes, timestamps/timezones, adjusted prices, missing/duplicate data, simple vs log returns. Introduce canonical instrument identity and explicit time semantics so vendor symbols and wall-clock assumptions do not leak into research.
 
 **Build:** Python package, tests, canonical bar/data contracts, return functions, capability-based provider interfaces designed for the two v1 connectors (IBKR and QuantConnect), and Jupyter research environment.  
 **Product:** Learn lesson page + first historical chart.
@@ -104,7 +104,7 @@ Look-ahead, survivorship, selection/data-snooping bias, repeated backtests, para
 Chronological train/validation/test, expanding/rolling windows, sensitivity/stability, robustness across assets/timeframes.
 
 ### Lesson 18 — Experiment registry and strategy promotion
-Record data/version/config/trials; define promotion gates from idea → researched → validated → paper candidate.
+Introduce experiment IDs/manifests capturing Git/code version, strategy/config version, data identity/range, universe, costs, split, metrics and artifacts. Define promotion gates from idea → researched → validated → paper candidate.
 
 **Stage checkpoint:** no strategy can become a paper bot without passing documented validation and risk gates.
 
@@ -151,15 +151,15 @@ Orders, IDs, partial fills, cancellations, positions, account state, reconciliat
 ## Stage 9 — Paper trading
 
 ### Lesson 28 — Paper bot runtime
-Run independently configured strategy bots; scheduler/event loop; health/status; persisted state.
+Run independently configured strategy bots; formalize StrategyDefinition → StrategyVersion → BotConfiguration → BotInstance → Run identity; scheduler/event loop; clock abstraction; health/status; persisted state.
 
-### Lesson 29 — Attribution and monitoring
-P&L per bot/strategy, per asset and total; realized/unrealized P&L; orders/fills; equity curves and diagnostics.
+### Lesson 29 — Attribution, persistence and monitoring
+P&L per bot/strategy/run, per asset and total; realized/unrealized P&L; orders/fills; equity curves; persistence boundaries; structured health/telemetry and reconciliation diagnostics.
 
 **Product:** Paper Trading + Strategies/Control tabs.
 
-### Lesson 30 — Operational safety
-Per-bot activate/deactivate, graceful stop, cancel-open-orders policy, exposure checks and global kill switch.
+### Lesson 30 — Operational safety and audit
+Per-bot activate/deactivate, graceful stop, cancel-open-orders policy, exposure checks, audited lifecycle commands and a global kill switch independent of strategy/LLM logic.
 
 **Exit:** extended paper-trading observation and reconciliation before any live promotion.
 
