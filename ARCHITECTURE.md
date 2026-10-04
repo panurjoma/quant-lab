@@ -1,90 +1,179 @@
-# Architecture
+# Quant Lab Architecture
 
-## Principles
+## Architectural goals
 
-Quant Lab uses a layered architecture so research code can mature into execution code without strategies becoming coupled to data vendors, web frameworks or brokers.
+Quant Lab must support three very different workloads without coupling them:
+1. **education/research**;
+2. **market observation**;
+3. **safe automated execution**.
 
-### Core rule
+The architecture therefore separates domain logic from presentation, strategies from execution, and paper from live environments.
+
+## User interface
 
 ```text
-strategy != broker
-strategy != UI
-backtest != strategy
++------------------------------------------------------------------+
+| Learn | Market | Paper Trading | Live Trading | Strategies/Control|
++-------------------------------+----------------------------------+
+                                |
+                           TypeScript/React
+                                |
+                              API
+                                |
+                              Python
 ```
 
-A strategy consumes well-defined market/features/state and produces an intent or signal. Portfolio, risk and execution layers decide how that intent becomes an order.
+### Learn
+Course navigation, interactive explanations, examples, charts, exercises, progress, paper references, experiments and AI tutoring. This is the first UI to implement.
 
-## Logical components
+### Market
+Read-only market observation. Historical/real-time data, charts and observable features/signals. **No order commands exist in this surface.**
+
+### Paper Trading
+IBKR paper account/engine state: positions, orders/fills, P&L and performance attribution.
+
+### Live Trading
+Separate live-account observation. Starts read-only. Any future live control is gated and visually distinct from paper mode.
+
+### Strategies / Control
+Strategy catalogue and bot control plane. Each bot references:
+- strategy + immutable/versioned strategy code;
+- configuration;
+- universe/assets;
+- environment (backtest/paper/live);
+- lifecycle state;
+- performance attribution;
+- health and last heartbeat.
+
+Controls include per-bot activate/deactivate/stop and a global emergency stop.
+
+## Backend layers
+
+```text
+                         Application/API
+       +----------------------+------------------------+
+       |                      |                        |
+   Learning service       Market service         Trading control
+       |                      |                        |
+       +----------------------+------------------------+
+                              |
++----------------------------- Domain ------------------------------+
+| Data -> Features -> Strategy Signals -> Portfolio -> Risk         |
+|   |         |             |                       |               |
+| Research/Backtest          +-> Attribution        +-> Execution   |
++-----------------------------------------------------------+-------+
+                                                            |
+                                                     Broker interface
+                                                   /                  \
+                                              IBKR Paper           IBKR Live
+```
+
+## Core domain boundaries
 
 ### Data
-Acquisition, canonical schemas, calendars/timezones, validation, corporate-action handling and persistence/caching.
+Historical and streaming acquisition, canonical schemas, timestamps/calendars, validation, corporate actions and persistence/cache.
 
 ### Features
-Deterministic transformations and indicators. Features must encode their timing assumptions and never leak future information.
+Pure/time-aware transformations. A feature must not see information beyond its decision timestamp.
 
 ### Strategies
-Trading hypotheses and signal generation. Strategies should be testable against in-memory data without network access.
+Hypotheses producing signals/desired exposure. No network/broker calls.
 
 ### Backtesting
-Clock/event semantics, portfolio state, execution simulation, costs/slippage and performance accounting.
+Historical clock, information availability, simulated fills, costs and portfolio accounting. The same strategy interface should be usable outside the backtester.
 
 ### Portfolio
-Combines signals, determines target weights/exposures and handles constraints.
+Combines strategy intents and allocates capital subject to constraints.
 
 ### Risk
-Pre-trade and portfolio-level limits, sizing, drawdown/exposure controls and later operational kill switches.
+Independent controls over exposure, sizing, leverage, drawdown and later operational limits. Risk can reject/reduce strategy intent.
 
 ### Execution
-Converts approved targets/orders into broker-neutral execution requests; handles lifecycle, idempotency and reconciliation.
+Converts approved targets into orders and manages order lifecycle without exposing broker SDK details upward.
 
 ### Brokers
-Adapters such as PaperBroker and eventually IBKRBroker. Broker-specific SDK objects should not escape this boundary.
+Adapters. IBKR paper and live share concepts but **must be separate runtime configurations/connections**.
 
-### API
-A Python application/API layer exposes research and operational capabilities without contaminating the domain model.
+### Attribution
+Every position/order/fill/P&L event should be attributable to environment, bot, strategy version and asset. This enables per-bot/per-asset/aggregate historical performance.
 
-### Frontend
-TypeScript + React. It consumes APIs for experiments, strategy diagnostics, portfolio/risk and execution monitoring. The frontend is deliberately replaceable.
+### Bot runtime
+Runs strategy instances independently, tracks lifecycle/health and provides safe stop semantics. A bot is not synonymous with a strategy: multiple bots may run different configurations/universes of the same strategy.
 
-### AI/Agents
-AI is an optional orchestration/research layer, not the mathematical foundation of the system. Agents may help analyze experiments or select among already-defined tools/strategies, but deterministic controls remain outside LLM authority.
+## Safety state model
 
-## Dependency direction
+Suggested lifecycle:
 
 ```text
-UI -> API -> application/domain
-                |
-                +-> data
-                +-> features
-                +-> strategies
-                +-> portfolio/risk
-                +-> execution -> broker adapters
+DRAFT -> RESEARCHED -> VALIDATED -> PAPER_ELIGIBLE -> PAPER_ACTIVE
+                                             |
+                                             v
+                                        PAPER_STOPPED
+
+LIVE_ELIGIBLE is a separate explicit promotion after paper validation.
+LIVE execution is disabled by default.
 ```
 
-External dependencies point inward through interfaces/adapters wherever practical.
+Bot runtime states should distinguish at least STOPPED, STARTING, ACTIVE, STOPPING, ERROR and KILLED.
 
-## Research-to-live path
+A stop action must define whether it only prevents new orders, cancels open orders, and/or liquidates positions. These are **different operations** and must never be conflated.
+
+## Data/control flow
+
+```text
+market data
+   -> canonical event
+   -> feature state
+   -> strategy/bot
+   -> signal/target
+   -> portfolio aggregation
+   -> risk checks
+   -> execution intent
+   -> broker adapter
+   -> order/fill events
+   -> positions + attribution + UI
+```
+
+The Market tab taps the data/features side only. Learn can use historical/replay data. Paper/Live consume account/execution state. Control sends lifecycle commands, not arbitrary broker SDK calls.
+
+## Frontend/backend choice
+
+- **Python:** domain, research, statistics, ML, APIs and broker adapters.
+- **FastAPI:** preferred API candidate when implementation begins.
+- **TypeScript + React:** frontend.
+- **pytest:** tests.
+- **Jupyter:** exploration only; reusable logic moves into `src/quant_lab/`.
+
+For real-time UI updates, evaluate WebSockets/SSE when Market/Paper stages require them rather than adding infrastructure during Lesson 1.
+
+## Research-to-live promotion
 
 ```text
 hypothesis
-  -> notebook/exploration
-  -> reusable implementation
-  -> unit tests
-  -> historical backtest
-  -> out-of-sample/walk-forward
-  -> paper trading
-  -> operational validation
-  -> controlled live deployment
+ -> evidence/lesson
+ -> implementation/tests
+ -> historical experiment
+ -> realistic costs
+ -> out-of-sample/walk-forward
+ -> robustness
+ -> paper eligible
+ -> paper runtime/reconciliation
+ -> paper observation period
+ -> explicit live eligibility decision
+ -> live read-only integration
+ -> optional controlled live execution
 ```
 
-Promotion between stages requires evidence; it is not automatic.
+Promotion is recorded state, not an automatic consequence of a metric threshold.
 
-## Initial technology choices
+## Security/operations
 
-- Python for domain, research, statistics, ML, API and broker integration.
-- pytest for automated tests.
-- Jupyter for exploratory analysis, with reusable logic moved into `src/`.
-- TypeScript + React for the future web UI.
-- GitHub issues/PRs for learning milestones and engineering review.
-
-Specific data/backtesting/frontend frameworks are intentionally deferred until a lesson gives us enough requirements to compare them instead of selecting by fashion.
+- secrets never enter Git;
+- paper/live credentials and runtime configs are isolated;
+- least privilege;
+- audit lifecycle/control actions;
+- idempotent/recoverable order handling;
+- broker reconciliation is authoritative for actual account state;
+- stale market/account data is visible and can inhibit trading;
+- global kill switch is independent of individual strategy logic;
+- deterministic risk controls are not delegated to an LLM.
