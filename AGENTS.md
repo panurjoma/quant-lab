@@ -29,6 +29,11 @@ Do not optimize for impressive historical returns. Optimize for **correctness, t
 6. The TypeScript/React frontend communicates through stable APIs and must not implement trading rules.
 7. Prefer the smallest abstraction that satisfies the current lesson; avoid speculative frameworks.
 8. Every strategy and material quantitative transformation requires tests.
+9. Domain/runtime code must use explicit time/clock abstractions when behavior depends on “now”; do not hide wall-clock access inside strategy logic.
+10. External vendor identifiers/types are mapped at infrastructure boundaries; core logic uses canonical Quant Lab instruments/models.
+11. Strategy parameters, universes and risk settings belong in explicit configuration rather than unexplained constants.
+12. Preserve strategy, bot, run and experiment identity so results remain attributable and reproducible.
+13. Do not create target-architecture directories/modules until the current lesson has a concrete use for them.
 
 ## Agent behavior
 
