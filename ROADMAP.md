@@ -15,7 +15,7 @@ Markets, instruments, exchanges, orders, positions, P&L; discretionary vs system
 ### Lesson 1 — Market data, returns and research environment
 OHLCV, bid/ask concept, bars/ticks, timeframes, timestamps/timezones, adjusted prices, missing/duplicate data, simple vs log returns.
 
-**Build:** Python package, tests, canonical bar/data contracts, return functions, provider interface, Jupyter research environment.  
+**Build:** Python package, tests, canonical bar/data contracts, return functions, capability-based provider interfaces designed for the two v1 connectors (IBKR and QuantConnect), and Jupyter research environment.  
 **Product:** Learn lesson page + first historical chart.
 
 ### Lesson 2 — Descriptive statistics and performance
@@ -135,17 +135,18 @@ Use observable state to allocate among already validated strategies. LLMs do not
 ## Stage 8 — Real-time observation and execution engineering
 
 ### Lesson 25 — Real-time market data
-Streaming/subscriptions, stale data, reconnects, clocks, state and persistence.
+Streaming/subscriptions, stale data, reconnects, clocks, state and persistence. Use the supported capabilities of the two v1 connectors only: IBKR and QuantConnect. Normalize vendor data before it reaches the domain.
 
-**Product:** Market tab becomes real-time/read-only.
+**Product:** Market tab becomes real-time/read-only where the configured connector/data entitlement supports real-time delivery.
 
 ### Lesson 26 — Broker abstraction and order lifecycle
 Orders, IDs, partial fills, cancellations, positions, account state, reconciliation, retries/idempotency.
 
-### Lesson 27 — Interactive Brokers integration
-TWS/IB Gateway concepts, API session management, account/market-data constraints and paper/live environment separation.
+### Lesson 27 — External platform integrations
+**IBKR:** TWS/IB Gateway concepts, API session management, market/account data, order lifecycle and paper/live separation.  
+**QuantConnect:** research/data/backtest integration behind capability-specific interfaces.  
 
-**Build:** IBKR adapter behind the broker interface.
+**Build:** IBKR market/account + broker adapters and the QuantConnect research/data adapter. IBKR remains the only execution broker for v1.
 
 ## Stage 9 — Paper trading
 
@@ -204,12 +205,16 @@ A strategy must document:
 - version and reproducible configuration;
 - paper/live eligibility status.
 
-## Product delivery order
+## Product delivery / unlocking order
 
-1. **Learn** — starts immediately and grows every lesson.
-2. **Market** — historical first, real-time in Stage 8; always read-only.
-3. **Paper Trading** — after broker/execution foundations.
-4. **Strategies / Control** — catalogue early; operational controls when bots exist.
-5. **Live Trading** — read-only first; execution is the final gated capability.
+Tabs are unlocked by course capabilities rather than all being built upfront:
+
+1. **Learn** — unlocked first and grows every lesson.
+2. **Market** — historical observation unlocks with the data layer; real-time unlocks in Stage 8; always read-only.
+3. **Strategies / Control** — strategy catalogue unlocks as strategies are learned; bot controls remain locked until runtimes exist.
+4. **Paper Trading** — unlocks only after execution foundations and IBKR paper integration.
+5. **Live Trading** — unlocks only after paper validation; read-only first; execution is the final gated capability.
+
+V1 external financial-platform connectors are **IBKR + QuantConnect only**. Additional providers are intentionally out of scope until there is a demonstrated need.
 
 This order deliberately makes understanding and measurement prerequisites for automation.
