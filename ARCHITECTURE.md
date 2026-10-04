@@ -1,20 +1,80 @@
 # Quant Lab Architecture
 
-## Architectural goals
+## Goals
 
-Quant Lab must support three very different workloads without coupling them:
-1. **education/research**;
-2. **market observation**;
-3. **safe automated execution**.
+Quant Lab separates education/research, market observation and automated execution. It also deliberately limits v1 integration complexity to **two external financial-platform connectors: Interactive Brokers and QuantConnect**.
 
-The architecture therefore separates domain logic from presentation, strategies from execution, and paper from live environments.
+## Progressive UI
+
+```text
+Stage 1+          later                 execution stage        final gated stage
+ Learn  ------>  Market  ---------->  Paper + Control  ----->  Live
+(always grows)   (read-only)           (IBKR paper)            (read-only first)
+```
+
+The five conceptual tabs are:
+- **Learn** — first and continuously expanding.
+- **Market** — historical first; real-time later; never sends orders.
+- **Paper Trading** — unlocked after broker/execution + IBKR paper integration.
+- **Live Trading** — unlocked after paper validation; observation first.
+- **Strategies / Control** — strategy catalogue grows with lessons; runtime controls unlock with bots.
+
+Locked means the underlying capability is not yet part of the supported product, rather than presenting a misleading empty/unsafe control.
+
+## Exactly two v1 connectors
+
+### Interactive Brokers connector
+
+IBKR has two architectural roles:
+
+```text
+IBKR
+├── Market/account data adapter
+└── Broker/execution adapter
+    ├── Paper
+    └── Live (later, gated)
+```
+
+Paper and live use separate runtime configuration/connections. IBKR vendor objects cannot leak into strategy/domain interfaces.
+
+### QuantConnect connector
+
+QuantConnect is a **research/data/backtesting integration**, not the v1 execution broker:
+
+```text
+QuantConnect
+└── Research/data adapter
+    ├── historical/research data
+    └── comparative research/backtest workflows
+```
+
+Where QuantConnect workflows do not map cleanly to local streaming semantics, we expose only the capabilities actually supported rather than forcing a fake universal interface.
+
+### Provider capability interfaces
+
+Prefer capability-specific boundaries such as:
+
+```text
+HistoricalDataProvider
+SnapshotDataProvider
+StreamingDataProvider
+ResearchBacktestProvider
+Broker
+AccountProvider
+```
+
+Adapters implement only relevant capabilities. This avoids assuming that a research platform and an execution broker behave identically.
+
+All vendor data is normalized into Quant Lab models before reaching features/strategies.
+
+**No third external market-data connector is planned for v1.**
 
 ## User interface
 
 ```text
-+------------------------------------------------------------------+
-| Learn | Market | Paper Trading | Live Trading | Strategies/Control|
-+-------------------------------+----------------------------------+
++-------------------------------------------------------------------+
+| Learn | Market | Paper Trading | Live Trading | Strategies/Control |
++-------------------------------+-----------------------------------+
                                 |
                            TypeScript/React
                                 |
@@ -24,156 +84,105 @@ The architecture therefore separates domain logic from presentation, strategies 
 ```
 
 ### Learn
-Course navigation, interactive explanations, examples, charts, exercises, progress, paper references, experiments and AI tutoring. This is the first UI to implement.
+Course navigation, explanations, charts, exercises, progress, references, experiments and AI tutoring.
 
 ### Market
-Read-only market observation. Historical/real-time data, charts and observable features/signals. **No order commands exist in this surface.**
+Read-only historical/real-time observation. It consumes normalized data from supported provider capabilities and exposes source/freshness metadata. It has no execution commands.
 
 ### Paper Trading
-IBKR paper account/engine state: positions, orders/fills, P&L and performance attribution.
+IBKR paper state: account, positions, orders/fills, P&L and attribution.
 
 ### Live Trading
-Separate live-account observation. Starts read-only. Any future live control is gated and visually distinct from paper mode.
+Separate live account view; initially read-only. Live execution remains independently gated.
 
 ### Strategies / Control
-Strategy catalogue and bot control plane. Each bot references:
-- strategy + immutable/versioned strategy code;
-- configuration;
-- universe/assets;
-- environment (backtest/paper/live);
-- lifecycle state;
-- performance attribution;
-- health and last heartbeat.
+Catalogue + bot control plane. Each bot references strategy version, configuration, universe, environment, lifecycle, attribution and health. Controls include per-bot lifecycle commands and global emergency stop.
 
-Controls include per-bot activate/deactivate/stop and a global emergency stop.
-
-## Backend layers
+## Backend
 
 ```text
                          Application/API
-       +----------------------+------------------------+
-       |                      |                        |
-   Learning service       Market service         Trading control
-       |                      |                        |
-       +----------------------+------------------------+
+        +---------------------+-----------------------+
+        |                     |                       |
+     Learning              Market                Trading control
+        +---------------------+-----------------------+
                               |
-+----------------------------- Domain ------------------------------+
-| Data -> Features -> Strategy Signals -> Portfolio -> Risk         |
-|   |         |             |                       |               |
-| Research/Backtest          +-> Attribution        +-> Execution   |
-+-----------------------------------------------------------+-------+
-                                                            |
-                                                     Broker interface
-                                                   /                  \
-                                              IBKR Paper           IBKR Live
++----------------------------- Domain -----------------------------+
+| canonical data -> features -> strategy -> portfolio -> risk      |
+|       |                         |                      |          |
+| research/backtest              +-> attribution       execution   |
++-------+--------------------------------------------------+-------+
+        |                                                  |
+ Provider capabilities                               Broker interface
+   /             \                                         |
+IBKR          QuantConnect                                 IBKR
+data/account  research/data                         paper / gated live
 ```
 
-## Core domain boundaries
+## Core boundaries
 
 ### Data
-Historical and streaming acquisition, canonical schemas, timestamps/calendars, validation, corporate actions and persistence/cache.
+Canonical schemas, time, validation, corporate actions and persistence/cache. External data is translated at the edge.
 
 ### Features
-Pure/time-aware transformations. A feature must not see information beyond its decision timestamp.
+Pure/time-aware transformations with no future information.
 
 ### Strategies
-Hypotheses producing signals/desired exposure. No network/broker calls.
+Signals/desired exposure only; no vendor or network calls.
 
 ### Backtesting
-Historical clock, information availability, simulated fills, costs and portfolio accounting. The same strategy interface should be usable outside the backtester.
+Historical clock/information set, fills, costs and accounting. QuantConnect may be used as an independent comparative research environment, while Quant Lab retains its own testable domain contracts.
 
-### Portfolio
-Combines strategy intents and allocates capital subject to constraints.
+### Portfolio / Risk
+Aggregate strategy intent, allocate capital and independently constrain exposure/sizing.
 
-### Risk
-Independent controls over exposure, sizing, leverage, drawdown and later operational limits. Risk can reject/reduce strategy intent.
-
-### Execution
-Converts approved targets into orders and manages order lifecycle without exposing broker SDK details upward.
-
-### Brokers
-Adapters. IBKR paper and live share concepts but **must be separate runtime configurations/connections**.
+### Execution / Broker
+Convert approved intent to orders. **IBKR is the only v1 execution broker.**
 
 ### Attribution
-Every position/order/fill/P&L event should be attributable to environment, bot, strategy version and asset. This enables per-bot/per-asset/aggregate historical performance.
+Tag position/order/fill/P&L events by environment, bot, strategy version and asset.
 
 ### Bot runtime
-Runs strategy instances independently, tracks lifecycle/health and provides safe stop semantics. A bot is not synonymous with a strategy: multiple bots may run different configurations/universes of the same strategy.
+Independent strategy instances with configuration/universe/lifecycle/health.
 
-## Safety state model
-
-Suggested lifecycle:
+## Safety lifecycle
 
 ```text
 DRAFT -> RESEARCHED -> VALIDATED -> PAPER_ELIGIBLE -> PAPER_ACTIVE
-                                             |
-                                             v
-                                        PAPER_STOPPED
+                                                   -> PAPER_STOPPED
 
-LIVE_ELIGIBLE is a separate explicit promotion after paper validation.
+LIVE_ELIGIBLE is a separate explicit promotion.
 LIVE execution is disabled by default.
 ```
 
-Bot runtime states should distinguish at least STOPPED, STARTING, ACTIVE, STOPPING, ERROR and KILLED.
+A stop action must explicitly distinguish:
+- prevent new orders;
+- cancel open orders;
+- liquidate positions.
 
-A stop action must define whether it only prevents new orders, cancels open orders, and/or liquidates positions. These are **different operations** and must never be conflated.
+They are not interchangeable.
 
-## Data/control flow
-
-```text
-market data
-   -> canonical event
-   -> feature state
-   -> strategy/bot
-   -> signal/target
-   -> portfolio aggregation
-   -> risk checks
-   -> execution intent
-   -> broker adapter
-   -> order/fill events
-   -> positions + attribution + UI
-```
-
-The Market tab taps the data/features side only. Learn can use historical/replay data. Paper/Live consume account/execution state. Control sends lifecycle commands, not arbitrary broker SDK calls.
-
-## Frontend/backend choice
-
-- **Python:** domain, research, statistics, ML, APIs and broker adapters.
-- **FastAPI:** preferred API candidate when implementation begins.
-- **TypeScript + React:** frontend.
-- **pytest:** tests.
-- **Jupyter:** exploration only; reusable logic moves into `src/quant_lab/`.
-
-For real-time UI updates, evaluate WebSockets/SSE when Market/Paper stages require them rather than adding infrastructure during Lesson 1.
-
-## Research-to-live promotion
+## Research-to-live path
 
 ```text
-hypothesis
- -> evidence/lesson
+lesson/hypothesis
  -> implementation/tests
- -> historical experiment
+ -> historical research
  -> realistic costs
  -> out-of-sample/walk-forward
  -> robustness
  -> paper eligible
- -> paper runtime/reconciliation
- -> paper observation period
- -> explicit live eligibility decision
- -> live read-only integration
+ -> IBKR paper runtime/reconciliation
+ -> observation period
+ -> explicit live eligibility
+ -> IBKR live read-only
  -> optional controlled live execution
 ```
 
-Promotion is recorded state, not an automatic consequence of a metric threshold.
+## Technology
+
+Python domain/API/connectors; FastAPI candidate; TypeScript + React UI; pytest; Jupyter for exploration. WebSockets/SSE are evaluated only when real-time UI requirements arrive.
 
 ## Security/operations
 
-- secrets never enter Git;
-- paper/live credentials and runtime configs are isolated;
-- least privilege;
-- audit lifecycle/control actions;
-- idempotent/recoverable order handling;
-- broker reconciliation is authoritative for actual account state;
-- stale market/account data is visible and can inhibit trading;
-- global kill switch is independent of individual strategy logic;
-- deterministic risk controls are not delegated to an LLM.
+Secrets never enter Git; paper/live configs are isolated; broker state is reconciled; stale data is visible and may inhibit trading; lifecycle actions are auditable; kill switch is independent of strategy logic; deterministic risk controls are never delegated to an LLM.
