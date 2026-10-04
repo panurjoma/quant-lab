@@ -1,5 +1,10 @@
 # Quant Lab
 
+<p align="center">
+  <img src="assets/quant-lab-hero.svg" alt="Quant Lab — learn, research, backtest and trade" width="100%" />
+</p>
+
+
 Quant Lab is an **AI-assisted systematic trading learning environment, research laboratory and trading-control platform**. The repository grows from first principles into a tested system that progresses from research to Interactive Brokers paper trading and, only after explicit validation, live execution.
 
 The project has two equally important outcomes:
