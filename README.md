@@ -1,227 +1,186 @@
 # Quant Lab
 
-Quant Lab is an **AI-assisted systematic trading learning environment, research laboratory and trading-control platform**. The repository grows from first principles into a tested, broker-independent system that can progress from historical research to Interactive Brokers paper trading and, only after explicit validation, live execution.
+Quant Lab is an **AI-assisted systematic trading learning environment, research laboratory and trading-control platform**. The repository grows from first principles into a tested system that progresses from research to Interactive Brokers paper trading and, only after explicit validation, live execution.
 
 The project has two equally important outcomes:
 
-1. **Understanding** — learn why systematic strategies exist, their mathematics/statistics, evidence, assumptions and failure modes.
+1. **Understanding** — learn systematic strategies, mathematics/statistics, evidence, assumptions and failure modes.
 2. **Engineering** — turn that understanding into a reusable Python platform with a modern web interface.
 
 Backtest performance is not evidence of future returns. Quant Lab is designed to make it difficult to fool ourselves.
 
-## Product vision: five tabs
+## V1 external integrations: exactly two
 
-The application evolves around five top-level interfaces. They share one backend/domain model, but each has a different safety level.
+For the initial project scope we deliberately support only two external financial-platform connectors:
 
-### 1. Learn — first priority
+### Interactive Brokers (IBKR)
+The **broker and execution connector**, and also a market/account-data source when appropriate.
 
-The first product surface we build. It is an interactive course rather than a static collection of Markdown files.
+Planned responsibilities:
+- market-data access where the account/subscriptions permit it;
+- paper account state;
+- paper orders/fills/positions;
+- later live account observation;
+- only after explicit promotion, controlled live execution.
 
-It should eventually provide:
-- ordered lessons from market basics to advanced statistical/ML strategies;
-- explanations at intuition, mathematical and implementation levels;
-- worked examples and visualizations using real/historical market data;
+IBKR-specific SDK/API objects remain behind adapters; strategies never depend on IBKR.
+
+### QuantConnect
+The **research/data/backtesting connector**.
+
+Planned responsibilities:
+- historical/research data access where supported;
+- independent research/backtest comparison;
+- educational reproduction/comparison of strategies;
+- a second data source behind the same normalized Quant Lab data interfaces.
+
+QuantConnect is not the v1 execution broker. **IBKR is the only planned execution broker.**
+
+No Twelve Data, Alpha Vantage, Yahoo Finance or additional market-data provider is part of v1. New providers can be proposed later behind the same interfaces without redesigning strategies.
+
+## Product vision: progressive tabs
+
+The application has five conceptual tabs, but they are **unlocked by learning milestones**. We do not build empty operational screens before the course has created the capabilities behind them.
+
+### 1. Learn — available first
+The spine of the product:
+- ordered lessons from market/data basics to advanced statistical/ML strategies;
+- intuition, mathematics, evidence and implementation;
+- examples/visualizations using historical data;
 - exercises, quizzes and coding tasks;
-- progress tracking;
-- links to the papers/references motivating each strategy;
-- embedded experiment/backtest results;
-- an AI tutor that explains results and challenges assumptions;
-- a path from each lesson to the exact code, strategy and experiment it created.
+- progress;
+- paper/reference links;
+- experiment/backtest results;
+- AI tutor;
+- links from lessons to the code/PRs they created.
 
-The learning experience is the **spine of the product**: capabilities appear in the other tabs as the corresponding lesson is completed.
+### 2. Market — unlocked progressively; observation only
+Historical observation appears early; real-time observation is unlocked only after real-time-data lessons/connectors are implemented.
+- watchlists/instruments;
+- price/return charts and OHLCV;
+- selected features/signals;
+- timestamps/session/data-source status.
 
-### 2. Market — observation only
+This tab **cannot place orders**.
 
-A real-time/read-only market dashboard:
-- watchlists and instruments;
-- price/return charts;
-- OHLCV and selected indicators/features;
-- market/session status and timestamps;
-- strategy signals as observations where useful.
-
-This tab **cannot place orders**. Its purpose is to understand the market state and the data consumed by strategies.
-
-### 3. Paper Trading
-
-An operational dashboard connected to the **Interactive Brokers paper account**:
+### 3. Paper Trading — locked until execution + IBKR paper integration
 - paper account equity/cash;
-- positions and orders;
+- positions, orders and fills;
 - realized/unrealized P&L;
-- performance by asset, strategy/bot and total portfolio;
-- historical equity/P&L curves;
-- fills, costs and execution diagnostics;
-- reconciliation between internal state and broker state.
+- performance per asset, bot/strategy and total;
+- historical equity/P&L;
+- execution/reconciliation diagnostics.
 
-Paper execution is a required stage before live trading.
+### 4. Live Trading — locked until paper validation
+Initially observation-only. Any future live-order capability is a separate, explicitly gated milestone with risk controls and kill switches.
 
-### 4. Live Trading — initially observation-first
+### 5. Strategies / Control — catalogue first, controls later
+Strategy knowledge can appear as strategies are learned. Runtime controls unlock only when bots exist:
+- strategy hypothesis/rules/evidence/version;
+- bot active/inactive/health state;
+- universe/assets;
+- P&L by bot, asset and aggregate;
+- exposure/risk;
+- activate/deactivate/stop;
+- global automated-trading kill switch.
 
-A separate live-account surface, introduced only after the research and paper-trading pipeline is mature.
+A **strategy** is reusable logic; a **bot** is a running strategy configuration/environment/universe.
 
-Initial scope is **observation of live performance and state**, not casual order placement. Any later live-control capability requires explicit safeguards, authentication, confirmations, risk limits and kill switches.
+## Technology
 
-Paper and live environments must be visually and technically distinguishable to reduce accidental actions.
-
-### 5. Strategies / Control
-
-The control plane for independent strategy bots:
-- strategy catalogue with hypothesis, rules, evidence and version;
-- active/inactive state;
-- bot health/status;
-- assets/universe assigned to each bot;
-- P&L per strategy, per asset and total;
-- historical performance;
-- current exposure and risk;
-- activate/deactivate a bot;
-- cancel/stop a strategy safely;
-- **global stop / kill switch** for automated trading.
-
-Each bot runs a defined strategy configuration. Strategy identity and P&L attribution must survive from backtest through paper/live execution.
-
-## Technology direction
-
-### Quantitative/backend — Python
-
-Python is the primary language for market data, statistics, research, strategies, backtesting, portfolio/risk, execution, broker integration, ML and APIs.
-
-Expected ecosystem is introduced only when needed: NumPy, pandas/Polars, SciPy/statsmodels, scikit-learn, pytest, Jupyter and an evaluated backtesting engine.
-
-### API/application layer — Python
-
-FastAPI is the leading choice for the application boundary when the interactive UI needs it. Domain code does not depend on HTTP.
-
-### Frontend — TypeScript + React
-
-The UI will use **TypeScript + React**: modern, strongly typed, widely maintained and suitable for interactive dashboards. Framework/tooling will be selected when we implement the Learn UI rather than prematurely locking the architecture.
-
-The frontend consumes APIs; trading logic stays in Python.
+- **Python:** quantitative domain, research, data, strategies, backtesting, portfolio/risk, execution, connectors and API.
+- **FastAPI:** leading application/API candidate once required.
+- **TypeScript + React:** modern web UI; framework/tooling chosen when Learn UI implementation requires it.
+- **Jupyter:** exploratory research, with reusable logic moved into the Python package.
+- **pytest:** automated correctness tests.
 
 ## System shape
 
 ```text
-                     +---------------- Web UI ----------------+
-                     | Learn | Market | Paper | Live | Control|
-                     +-------------------+---------------------+
-                                         |
-                                      Python API
-                                         |
-       +---------------- Quant / Trading Domain ----------------+
-       | data -> features -> strategies -> portfolio -> risk    |
-       |                         |                    -> execution|
-       | backtesting/research    |                         |     |
-       +-------------------------+-------------------------+-----+
-                                 |                         |
-                           attribution/state         Broker abstraction
-                                                           |
-                                             +-------------+-----------+
-                                             |                         |
-                                         IBKR Paper                 IBKR Live
+             +----------- progressively unlocked UI -----------+
+             | Learn | Market | Paper | Live | Strategies      |
+             +-----------------------+--------------------------+
+                                     |
+                                  Python API
+                                     |
+ +-------------------------- Quant Lab ---------------------------+
+ | Data -> Features -> Strategies -> Portfolio -> Risk -> Execution|
+ |   |                       |             |             |         |
+ | Research/Backtest         +------ Attribution          |         |
+ +---+---------------------------------------------------+---------+
+     |                                                   |
+ MarketData/Research interfaces                     Broker interface
+     |                                                   |
+ +---+----------------+                                  |
+ |                    |                                  |
+IBKR              QuantConnect                          IBKR
+market/account    research/data                 paper -> later live
 ```
 
-A strategy produces signals/intent. It **never calls a broker directly**.
+The rest of Quant Lab consumes **normalized internal models**, not vendor-specific objects.
 
 ## Learning philosophy
 
-Every concept follows:
-
 ```text
-question -> intuition -> mathematics -> evidence/paper
+question -> intuition -> mathematics -> evidence
  -> worked example -> hypothesis -> implementation
  -> tests -> backtest/experiment -> interpretation
- -> failure modes -> challenge -> reusable platform capability
+ -> failure modes -> challenge -> capability unlocked
 ```
-
-We learn research hygiene early. A moving average is easy to code; knowing whether its apparent profit is meaningful is the harder skill.
 
 AI roles:
 - **ChatGPT:** tutor, research synthesizer, quant critic and examiner.
-- **Codex in VS Code:** implementation agent following explicit issue/lesson specifications.
-- **GitHub:** source of truth for lessons, papers, decisions, experiments, issues and PRs.
+- **Codex:** implementation agent working from explicit lesson/issue specifications.
+- **GitHub:** source of truth for lessons, references, decisions, experiments and code.
 - **Learner:** architect/researcher responsible for understanding assumptions and evidence.
 
-## Curriculum
-
-See [ROADMAP.md](ROADMAP.md) for the detailed prerequisite-driven sequence and [REFERENCES.md](REFERENCES.md) for literature and technical references.
-
-The high-level progression is:
-
-1. markets, data, returns and time;
-2. Python research environment and data contracts;
-3. performance/risk metrics and a minimal honest backtester;
-4. simple trend/momentum and mean-reversion hypotheses;
-5. relative value, stationarity, pairs and cointegration;
-6. cross-sectional factors and portfolio/risk construction;
-7. robust validation, costs, overfitting and walk-forward research;
-8. advanced statistical arbitrage;
-9. regime detection and ML;
-10. broker/execution engineering;
-11. IBKR paper trading;
-12. live observation/controlled deployment;
-13. multi-strategy orchestration and AI-assisted analysis.
-
-## Development workflow
-
-```text
-Issue / learning objective
- -> lesson + references
- -> branch
- -> implementation + tests
- -> experiment
- -> learner interpretation/challenge
- -> PR review
- -> merge
- -> capability appears in the application
-```
+See [ROADMAP.md](ROADMAP.md), [ARCHITECTURE.md](ARCHITECTURE.md), [course/README.md](course/README.md) and [REFERENCES.md](REFERENCES.md).
 
 ## Repository direction
 
 ```text
 quant-lab/
-├── course/             # Interactive-course source material
-├── references/         # Optional deeper notes derived from papers
-├── notebooks/          # Exploration; reusable logic moves to src/
+├── course/
+├── notebooks/
 ├── src/quant_lab/
-│   ├── data/
+│   ├── data/             # normalized data models + IBKR/QuantConnect adapters
 │   ├── features/
 │   ├── strategies/
 │   ├── backtesting/
 │   ├── portfolio/
 │   ├── risk/
 │   ├── execution/
-│   ├── brokers/
+│   ├── brokers/          # IBKR execution adapter
 │   ├── attribution/
 │   └── application/
 ├── tests/
 ├── experiments/
-├── frontend/           # TypeScript/React application
+├── frontend/
 ├── ROADMAP.md
 ├── ARCHITECTURE.md
 ├── REFERENCES.md
 └── AGENTS.md
 ```
 
-Directories are added when a real lesson/use case requires them.
-
 ## Non-negotiables
 
-- no look-ahead bias or future leakage;
-- timestamps/timezones and decision timing are explicit;
-- costs/slippage are incorporated before performance claims;
-- research tracks trials/parameters to expose overfitting risk;
-- train/validation/test periods respect time;
-- risk is reported alongside return;
-- strategy, portfolio, risk and execution are separate;
-- broker-specific code is isolated;
-- P&L is attributable by bot/strategy and asset;
-- paper trading precedes live trading;
-- live and paper modes cannot be confused;
-- all automated trading has per-bot stop controls and a global kill switch;
-- live-order capability is disabled by default.
+- no look-ahead/future leakage;
+- explicit timestamps/timezones/decision timing;
+- realistic costs before performance claims;
+- chronological validation;
+- risk reported with return;
+- strategies independent from vendors/brokers;
+- vendor data normalized at connector boundaries;
+- P&L attributable by bot/strategy and asset;
+- paper before live;
+- paper/live visibly and technically separated;
+- per-bot stop controls + global kill switch;
+- live orders disabled by default.
 
 ## First implementation
 
-**Lesson 1 — Market Data, Returns & Research Environment** remains the correct first coding milestone.
+**Lesson 1 — Market Data, Returns & Research Environment** is the first coding milestone.
 
-It establishes the Python package, tests, canonical OHLCV/time model, simple/log returns, validation, provider abstraction and a first research notebook. The first UI increment should be a minimal **Learn** shell that can render the lesson structure; trading controls come much later.
+It establishes the Python package/tests, canonical OHLCV/time models, simple/log returns, validation and a **provider abstraction designed for the two v1 connectors: IBKR and QuantConnect**. The lesson does not need to fully integrate both external APIs immediately; it establishes the contract they will later implement.
 
-The measure of success is not the number of bots or historical Sharpe ratios. It is whether Quant Lab can teach, test and operate a hypothesis without hiding the assumptions that make the result possible.
+The first UI increment is the minimal **Learn** shell. Other tabs unlock only when their prerequisites exist.
