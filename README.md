@@ -138,29 +138,29 @@ See [ROADMAP.md](ROADMAP.md), [ARCHITECTURE.md](ARCHITECTURE.md), [course/README
 
 ## Repository direction
 
+The target structure separates **domain**, **research**, **runtime** and **infrastructure** so external vendors never become the architecture:
+
 ```text
 quant-lab/
 ├── course/
 ├── notebooks/
-├── src/quant_lab/
-│   ├── data/             # normalized data models + IBKR/QuantConnect adapters
-│   ├── features/
-│   ├── strategies/
-│   ├── backtesting/
-│   ├── portfolio/
-│   ├── risk/
-│   ├── execution/
-│   ├── brokers/          # IBKR execution adapter
-│   ├── attribution/
-│   └── application/
-├── tests/
 ├── experiments/
+├── src/quant_lab/
+│   ├── domain/          # instruments, market data, signals, orders, events
+│   ├── research/        # features, statistics, backtesting, experiments
+│   ├── strategies/
+│   ├── risk/
+│   ├── attribution/
+│   ├── runtime/         # bots and clock abstractions
+│   ├── application/
+│   └── infrastructure/  # IBKR, QuantConnect, persistence, telemetry
+├── api/
 ├── frontend/
-├── ROADMAP.md
-├── ARCHITECTURE.md
-├── REFERENCES.md
-└── AGENTS.md
+├── tests/               # unit, integration, contract, e2e as needed
+└── docs/
 ```
+
+This is a **target architecture, not initial scaffolding**. Components/directories are introduced only when a lesson creates a real requirement. See [ARCHITECTURE.md](ARCHITECTURE.md) for canonical instruments, clocks, events, configuration/versioning, experiment identity, persistence, bot/run identity, audit, observability and the testing model.
 
 ## Non-negotiables
 
