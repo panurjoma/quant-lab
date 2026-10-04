@@ -1,5 +1,10 @@
 # Quant Lab Interactive Course
 
+<p align="center">
+  <img src="../assets/quant-lab-hero.svg" alt="Quant Lab learning-to-trading journey" width="100%" />
+</p>
+
+
 The **Learn** tab is the primary product surface during the first stages of Quant Lab. Markdown files are the version-controlled source of truth, but the application will progressively render them as an interactive course connected to code and experiments.
 
 ## Learning model
