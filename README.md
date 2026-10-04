@@ -1,7 +1,7 @@
 # Quant Lab
 
 <p align="center">
-  <img src="assets/quant-lab-hero.svg" alt="Quant Lab — learn, research, backtest and trade" width="100%" />
+  <img src="assets/quant-lab-hero.png" alt="Quant Lab — market research illustrated by a flask and a fluctuating market line" width="100%" />
 </p>
 
 
