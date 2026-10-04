@@ -2,7 +2,9 @@
 
 ## Goals
 
-Quant Lab separates education/research, market observation and automated execution. It also deliberately limits v1 integration complexity to **two external financial-platform connectors: Interactive Brokers and QuantConnect**.
+Quant Lab separates education/research, market observation and automated execution. It deliberately limits v1 integration complexity to **two external financial-platform connectors: Interactive Brokers and QuantConnect**.
+
+The architecture below is a **target map, not a request to scaffold everything immediately**. Boundaries are introduced only when a lesson creates a real requirement.
 
 ## Progressive UI
 
@@ -12,62 +14,30 @@ Stage 1+          later                 execution stage        final gated stage
 (always grows)   (read-only)           (IBKR paper)            (read-only first)
 ```
 
-The five conceptual tabs are:
-- **Learn** — first and continuously expanding.
-- **Market** — historical first; real-time later; never sends orders.
-- **Paper Trading** — unlocked after broker/execution + IBKR paper integration.
-- **Live Trading** — unlocked after paper validation; observation first.
-- **Strategies / Control** — strategy catalogue grows with lessons; runtime controls unlock with bots.
-
-Locked means the underlying capability is not yet part of the supported product, rather than presenting a misleading empty/unsafe control.
+The five conceptual tabs are Learn, Market, Paper Trading, Live Trading and Strategies/Control. Locked means the underlying capability is not yet supported rather than showing a misleading empty/unsafe control.
 
 ## Exactly two v1 connectors
 
-### Interactive Brokers connector
+### Interactive Brokers
+IBKR provides market/account-data capabilities where supported and is the **only v1 execution broker**. Paper and live use separate runtime configuration/connections. Vendor objects cannot leak into strategy/domain interfaces.
 
-IBKR has two architectural roles:
+### QuantConnect
+QuantConnect is a **research/data/backtesting integration**, not the v1 execution broker. It is used for historical/research data and comparative research/backtest workflows.
 
-```text
-IBKR
-├── Market/account data adapter
-└── Broker/execution adapter
-    ├── Paper
-    └── Live (later, gated)
-```
+### Capability-specific ports
 
-Paper and live use separate runtime configuration/connections. IBKR vendor objects cannot leak into strategy/domain interfaces.
-
-### QuantConnect connector
-
-QuantConnect is a **research/data/backtesting integration**, not the v1 execution broker:
-
-```text
-QuantConnect
-└── Research/data adapter
-    ├── historical/research data
-    └── comparative research/backtest workflows
-```
-
-Where QuantConnect workflows do not map cleanly to local streaming semantics, we expose only the capabilities actually supported rather than forcing a fake universal interface.
-
-### Provider capability interfaces
-
-Prefer capability-specific boundaries such as:
+Do not force both platforms into one oversized interface. Prefer ports such as:
 
 ```text
 HistoricalDataProvider
 SnapshotDataProvider
 StreamingDataProvider
 ResearchBacktestProvider
-Broker
 AccountProvider
+ExecutionBroker
 ```
 
-Adapters implement only relevant capabilities. This avoids assuming that a research platform and an execution broker behave identically.
-
-All vendor data is normalized into Quant Lab models before reaching features/strategies.
-
-**No third external market-data connector is planned for v1.**
+Adapters implement only capabilities they genuinely support. All external data is normalized before reaching the domain.
 
 ## User interface
 
@@ -78,27 +48,18 @@ All vendor data is normalized into Quant Lab models before reaching features/str
                                 |
                            TypeScript/React
                                 |
-                              API
+                         Application/API
                                 |
                               Python
 ```
 
-### Learn
-Course navigation, explanations, charts, exercises, progress, references, experiments and AI tutoring.
+- **Learn:** course, examples, experiments, references and AI tutoring.
+- **Market:** read-only historical/real-time observation; no order commands.
+- **Paper:** IBKR paper account, positions, orders/fills and attribution.
+- **Live:** separate live view; initially read-only.
+- **Strategies/Control:** strategy catalogue and, later, bot lifecycle/control.
 
-### Market
-Read-only historical/real-time observation. It consumes normalized data from supported provider capabilities and exposes source/freshness metadata. It has no execution commands.
-
-### Paper Trading
-IBKR paper state: account, positions, orders/fills, P&L and attribution.
-
-### Live Trading
-Separate live account view; initially read-only. Live execution remains independently gated.
-
-### Strategies / Control
-Catalogue + bot control plane. Each bot references strategy version, configuration, universe, environment, lifecycle, attribution and health. Controls include per-bot lifecycle commands and global emergency stop.
-
-## Backend
+## Target backend boundaries
 
 ```text
                          Application/API
@@ -108,42 +69,232 @@ Catalogue + bot control plane. Each bot references strategy version, configurati
         +---------------------+-----------------------+
                               |
 +----------------------------- Domain -----------------------------+
-| canonical data -> features -> strategy -> portfolio -> risk      |
-|       |                         |                      |          |
-| research/backtest              +-> attribution       execution   |
-+-------+--------------------------------------------------+-------+
-        |                                                  |
- Provider capabilities                               Broker interface
-   /             \                                         |
-IBKR          QuantConnect                                 IBKR
-data/account  research/data                         paper / gated live
+| Instrument | Market Data | Events | Signals | Orders | Portfolio |
++-------------------------------+----------------------------------+
+                                |
++--------------------------- Services ------------------------------+
+| Research | Features | Strategies | Backtesting | Risk | Attribution|
+| Runtime/Bots | Experiment Registry | Configuration               |
++-------------------------------+----------------------------------+
+                                |
++------------------------ Infrastructure ---------------------------+
+| IBKR | QuantConnect | Persistence | Telemetry | Clock adapters    |
++------------------------------------------------------------------+
 ```
 
-## Core boundaries
+## Foundational domain concepts
 
-### Data
-Canonical schemas, time, validation, corporate actions and persistence/cache. External data is translated at the edge.
+### Instrument / security master
 
-### Features
-Pure/time-aware transformations with no future information.
+A ticker is not a durable identity. Quant Lab needs a canonical `Instrument` independent of vendors, with fields introduced as needed such as:
+- internal ID;
+- symbol;
+- asset class;
+- currency;
+- exchange/venue;
+- vendor identifiers/mappings.
 
-### Strategies
-Signals/desired exposure only; no vendor or network calls.
+IBKR and QuantConnect identifiers map to the canonical instrument at adapter boundaries. This is essential for comparing feeds and reconciling research with execution.
 
-### Backtesting
-Historical clock/information set, fills, costs and accounting. QuantConnect may be used as an independent comparative research environment, while Quant Lab retains its own testable domain contracts.
+### Time and Clock
 
-### Portfolio / Risk
-Aggregate strategy intent, allocate capital and independently constrain exposure/sizing.
+Time is a dependency, not a global utility. Domain/runtime code should not casually call the machine clock.
 
-### Execution / Broker
-Convert approved intent to orders. **IBKR is the only v1 execution broker.**
+Conceptually support:
+- `HistoricalClock` / backtest clock;
+- `ReplayClock`;
+- `RealTimeClock`.
 
-### Attribution
-Tag position/order/fill/P&L events by environment, bot, strategy version and asset.
+This makes historical runs deterministic and lets the same decision logic move toward real time without changing its notion of “now”.
 
-### Bot runtime
-Independent strategy instances with configuration/universe/lifecycle/health.
+### Canonical event model
+
+As capabilities appear, converge on explicit domain events such as:
+
+```text
+MarketDataEvent
+ -> Signal
+ -> TargetPosition
+ -> OrderIntent
+ -> Order
+ -> Fill
+ -> PositionSnapshot
+ -> PnLEvent
+```
+
+Not every event must exist in Lesson 1. The objective is one vocabulary across backtest, replay, paper and live.
+
+### Versioned configuration
+
+Strategy parameters, universe, provider selection, risk limits and runtime environment belong in explicit configuration rather than constants hidden in code.
+
+A reproducible run should ultimately identify at least:
+
+```text
+code/git version
++ strategy version
++ configuration version
++ data identity/range
++ environment
+= reproducible run context
+```
+
+## Research and experiment identity
+
+Every meaningful backtest/experiment eventually receives an `experiment_id`. Its manifest should capture:
+- code/Git commit;
+- strategy + version;
+- configuration/parameters;
+- universe/instruments;
+- provider/data range and relevant data identity;
+- timeframe;
+- costs/slippage;
+- evaluation split;
+- metrics/benchmark;
+- creation timestamp and result artifacts.
+
+This lets Learn link a lesson directly to the experiment that demonstrated—or falsified—the concept.
+
+## Strategy, bot and run identity
+
+Keep these concepts distinct:
+
+```text
+StrategyDefinition
+       |
+StrategyVersion
+       |
+BotConfiguration
+       |
+BotInstance
+       |
+Run
+       |
+Orders / Fills / Positions / P&L
+```
+
+A strategy is reusable logic. A bot is a configured runtime instance. A run is one execution history. Attribution can therefore answer P&L by asset, bot, strategy version and total portfolio.
+
+## Persistence and state
+
+Persistence is an explicit architectural boundary, introduced incrementally. Likely persistent information includes:
+- course/progress state;
+- experiment manifests/results;
+- strategy/configuration versions;
+- bot lifecycle state;
+- orders/fills/positions;
+- attribution/P&L snapshots;
+- audit events;
+- cached market data where appropriate.
+
+Start simple. A relational database such as PostgreSQL is a likely later choice, but no database is required merely to complete Lesson 1.
+
+## Control plane and audit
+
+Lifecycle commands are separate from strategy logic. Every material control action should eventually record actor/source, timestamp, requested action, previous/new state and result.
+
+A bot stop must distinguish:
+1. prevent new orders;
+2. cancel open orders;
+3. liquidate positions.
+
+The global kill switch is independent of bot/strategy code and cannot be bypassed by an LLM.
+
+## Observability
+
+Operational observability is distinct from financial charts. Eventually expose:
+- connector connected/disconnected state;
+- data freshness/staleness;
+- bot heartbeat/status;
+- order rejection/failure;
+- reconciliation mismatches;
+- API/provider latency;
+- last successful synchronization;
+- application errors and relevant metrics.
+
+Observability should use structured logs/metrics and feed UI health indicators when those stages arrive.
+
+## Core quantitative boundaries
+
+- **Data:** canonical schemas, instrument mapping, time, validation, corporate actions and caching/persistence.
+- **Features:** pure/time-aware transformations.
+- **Strategies:** signals/desired exposure only; no vendor/network calls.
+- **Backtesting:** historical clock/information set, fills, costs and accounting.
+- **Portfolio:** aggregate strategy intent and capital allocation.
+- **Risk:** independent limits on exposure/sizing/leverage/drawdown.
+- **Execution:** translate approved intent into broker-neutral order requests.
+- **Attribution:** tag financial events by environment, bot, strategy version and asset.
+- **Bot runtime:** independent configured strategy instances with lifecycle/health.
+
+## Testing architecture
+
+Use a trading-specific test pyramid:
+
+```text
+many        Unit tests
+            - returns/features/statistics/domain invariants
+            - deterministic and no network
+
+fewer       Deterministic strategy/backtest tests
+            - known fixtures
+            - clock/timing/leakage edge cases
+
+fewer       Connector contract/integration tests
+            - IBKR / QuantConnect adapters
+            - vendor behavior isolated from domain tests
+
+few         End-to-end tests
+            - application -> bot -> paper execution/reconciliation
+```
+
+Normal unit tests must not require external platforms, credentials or network access.
+
+## Target repository structure
+
+```text
+quant-lab/
+├── course/
+├── notebooks/
+├── experiments/
+├── src/quant_lab/
+│   ├── domain/
+│   │   ├── instruments/
+│   │   ├── market_data/
+│   │   ├── signals/
+│   │   ├── orders/
+│   │   ├── portfolio/
+│   │   └── events/
+│   ├── research/
+│   │   ├── features/
+│   │   ├── statistics/
+│   │   ├── backtesting/
+│   │   └── experiments/
+│   ├── strategies/
+│   ├── risk/
+│   ├── attribution/
+│   ├── runtime/
+│   │   ├── bots/
+│   │   └── clock/
+│   ├── application/
+│   └── infrastructure/
+│       ├── ibkr/
+│       ├── quantconnect/
+│       ├── persistence/
+│       └── telemetry/
+├── api/
+├── frontend/
+├── tests/
+│   ├── unit/
+│   ├── integration/
+│   ├── contract/
+│   └── e2e/
+├── docs/
+├── ROADMAP.md
+├── REFERENCES.md
+└── AGENTS.md
+```
+
+This is the destination, **not Lesson 1 scaffolding**. Create directories/modules only when a lesson uses them.
 
 ## Safety lifecycle
 
@@ -155,18 +306,12 @@ LIVE_ELIGIBLE is a separate explicit promotion.
 LIVE execution is disabled by default.
 ```
 
-A stop action must explicitly distinguish:
-- prevent new orders;
-- cancel open orders;
-- liquidate positions.
-
-They are not interchangeable.
-
 ## Research-to-live path
 
 ```text
 lesson/hypothesis
  -> implementation/tests
+ -> experiment identity
  -> historical research
  -> realistic costs
  -> out-of-sample/walk-forward
@@ -181,8 +326,8 @@ lesson/hypothesis
 
 ## Technology
 
-Python domain/API/connectors; FastAPI candidate; TypeScript + React UI; pytest; Jupyter for exploration. WebSockets/SSE are evaluated only when real-time UI requirements arrive.
+Python domain/research/API/connectors; FastAPI candidate; TypeScript + React UI; pytest; Jupyter exploration. WebSockets/SSE, database and production telemetry are selected only when their requirements arrive.
 
-## Security/operations
+## Incremental implementation rule
 
-Secrets never enter Git; paper/live configs are isolated; broker state is reconciled; stale data is visible and may inhibit trading; lifecycle actions are auditable; kill switch is independent of strategy logic; deterministic risk controls are never delegated to an LLM.
+Architecture should guide implementation without creating speculative enterprise scaffolding. Lesson 1 introduces only what it genuinely needs: initial instrument/data/time concepts, provider ports, return calculations, tests, research environment and minimal Learn UI. Later lessons grow events, experiments, persistence, bots and operations when their use cases become concrete.
