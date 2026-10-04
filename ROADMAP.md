@@ -1,123 +1,215 @@
-# Quant Lab Roadmap
+# Quant Lab — Prerequisite-Driven Roadmap
 
-The roadmap deliberately interleaves **financial theory, statistics and software construction**. Each phase leaves the repository more capable than before.
+This roadmap is ordered for **learning**, not feature marketing. Each stage introduces only concepts needed by the next one, and every strategy is treated as a falsifiable hypothesis rather than an indicator recipe.
 
-## Phase 0 — Foundation
+## Stage 0 — Bootstrap: understand the system we are building
 
-### Bootstrap
-Define vision, architecture, AI-agent guardrails and the lesson workflow.
+### Lesson 0 — Systematic trading mental model
+Markets, instruments, exchanges, orders, positions, P&L; discretionary vs systematic trading; signal vs portfolio vs execution; research/backtest/paper/live environments.
 
-### Lesson 1 — Market Data, Returns & Research Environment
-**Learn:** instruments, exchanges, OHLCV bars, timeframes, adjusted prices, simple returns, log returns, missing data and time-series ordering.
+**Build:** repository conventions and architecture.  
+**Product:** Learn tab skeleton/content model.
 
-**Build:** Python package scaffold, test environment, OHLCV/data contracts, return functions, provider abstraction and first research notebook.
+## Stage 1 — Data and measurement
 
-**Exit criterion:** ingest a small historical dataset, validate it, calculate returns correctly and explain every column/transformation.
+### Lesson 1 — Market data, returns and research environment
+OHLCV, bid/ask concept, bars/ticks, timeframes, timestamps/timezones, adjusted prices, missing/duplicate data, simple vs log returns.
 
-## Phase 1 — Signals from price
+**Build:** Python package, tests, canonical bar/data contracts, return functions, provider interface, Jupyter research environment.  
+**Product:** Learn lesson page + first historical chart.
 
-### Lesson 2 — Moving averages and features
-Rolling windows, SMA/EMA, lagging, normalization and feature timing.
+### Lesson 2 — Descriptive statistics and performance
+Mean/variance/std, distributions, compounding, covariance/correlation, volatility, drawdown, CAGR, Sharpe/Sortino intuition, benchmark and risk-free-rate concepts.
 
-### Lesson 3 — Momentum
-Absolute/time-series momentum, relative momentum and cross-sectional ranking.
+**Build:** reusable metrics module and tests.  
+**Why now:** we need a language for evaluating every later strategy.
 
-### Lesson 4 — Breakouts
-Ranges, rolling highs/lows, trend-following intuition and false breakouts.
+### Lesson 3 — Backtesting mechanics before strategies
+Information sets, lagging, event/order timing, fills, fees, bid/ask spread, slippage, turnover, warm-up, survivorship/corporate-action concepts.
 
-### Lesson 5 — Mean reversion
-Equilibrium assumptions, deviations from rolling baselines and why falling prices are not automatically bargains.
+**Build:** deliberately small baseline backtest/event contract; benchmark buy-and-hold experiment.  
+**Exit:** explain why a backtest can be wrong even when code is correct.
 
-### Lesson 6 — Bollinger Bands, RSI and Z-scores
-Volatility-scaled deviation, oscillator interpretation and combined-signal experiments.
+## Stage 2 — First strategy families
 
-**Phase output:** a common Strategy/Signal interface and several intentionally simple baseline strategies.
+### Lesson 4 — Rolling windows, moving averages and trend
+SMA/EMA, rolling calculations, lagging, normalization; trend as a hypothesis rather than a chart pattern.
 
-## Phase 2 — Relative value and statistical trading
+**Build:** feature interface + MA crossover baseline.
 
-### Lesson 7 — Pairs trading
-Spreads, hedge ratios and market-relative hypotheses.
+### Lesson 5 — Momentum
+Time-series/absolute momentum, relative momentum, cross-sectional ranking; horizons and turnover.
 
-### Lesson 8 — Cointegration
-Stationarity vs correlation, ADF-style testing, residual behavior and half-life intuition.
+**Evidence anchor:** Moskowitz–Ooi–Pedersen and classic momentum literature.  
+**Build:** first reusable Strategy/Signal contract and momentum experiment.
 
-### Lesson 9 — Statistical arbitrage
-Multi-asset relative value, PCA/factor residuals, clustering and Ornstein-Uhlenbeck-style mean reversion.
+### Lesson 6 — Breakouts and trend following
+Rolling highs/lows, breakout rules, false breakouts, volatility scaling and relation to momentum.
 
-**Phase output:** statistical tests and relative-value strategy components with explicit assumptions.
+**Build:** breakout strategy under the same interface.
 
-## Phase 3 — Cross-sectional factors and portfolios
+### Lesson 7 — Mean reversion
+Equilibrium assumptions, deviations from rolling baselines, Z-score and half-life intuition; why a falling asset is not automatically cheap.
 
-### Lesson 10 — Factors
-Momentum, value, quality, size and volatility; ranking and portfolio formation.
+**Build:** simple Z-score mean-reversion strategy.
 
-### Lesson 11 — Portfolio construction
-Weights, diversification, covariance, constraints and optimization.
+### Lesson 8 — RSI and Bollinger Bands as features, not magic rules
+Derive/understand RSI and volatility bands; compare redundant/correlated features; test incremental information rather than stack indicators.
 
-### Lesson 12 — Risk management
-Exposure, drawdown, volatility targeting, position sizing, concentration and risk budgets.
+**Build:** controlled feature-ablation experiment.
 
-**Phase output:** signals become portfolios rather than isolated trades.
+**Stage checkpoint:** compare trend/momentum vs mean-reversion under identical metrics/cost assumptions and identify market conditions where each fails.
 
-## Phase 4 — Honest experimentation
+## Stage 3 — Time-series statistics and relative value
 
-### Lesson 13 — Backtesting correctly
-Event timing, fills, fees, spreads, slippage, survivorship bias, corporate actions and benchmark selection.
+### Lesson 9 — Stationarity, autocorrelation and regression
+Stationarity intuition, ACF, linear regression, residuals, hypothesis tests and multiple-comparison caution.
 
-### Lesson 14 — Overfitting and multiple testing
-Parameter searches, selection bias, data snooping and why the best historical strategy is suspicious.
+### Lesson 10 — Pairs trading
+Relative-value hypothesis, normalized-distance pairing, spread construction, hedge ratio and market-neutral intuition.
 
-### Lesson 15 — Walk-forward validation
-Train/validation/test splits for time series, rolling/expanding windows and out-of-sample evaluation.
+**Evidence anchor:** Gatev–Goetzmann–Rouwenhorst.
 
-**Phase output:** a repeatable experiment protocol and comparable performance/risk reports.
+### Lesson 11 — Cointegration
+Correlation vs cointegration, unit roots/ADF intuition, Engle-Granger workflow, residual stationarity and dynamic breakdown.
 
-## Phase 5 — Adaptive systems
+**Build:** pairs selection/validation pipeline with formation vs trading periods.
 
-### Lesson 16 — Regime detection
-Trend/mean-reversion, volatility and risk-off regimes; rules, clustering/HMM-like approaches as appropriate.
+## Stage 4 — Assets, factors and portfolios
 
-### Lesson 17 — Machine learning
-Define targets without leakage, feature pipelines, baseline models and probabilistic outputs.
+### Lesson 12 — Cross-sectional factors
+Momentum, value, size, quality/profitability, investment and low-volatility concepts; ranks, quantiles and factor exposure.
 
-### Lesson 18 — Strategy selection
-Meta-models that choose/weight strategies based on observable state rather than asking an LLM to predict prices.
+**Evidence anchors:** Fama/French and momentum literature.
 
-**Phase output:** adaptive allocation between validated strategies.
+### Lesson 13 — Portfolio construction
+Weights, long/short vs long-only, diversification, covariance, constraints, rebalancing and turnover.
 
-## Phase 6 — Execution
+### Lesson 14 — Risk management and sizing
+Volatility targeting, concentration, exposure, drawdown, position sizing, risk budgets and leverage/margin concepts.
 
-### Lesson 19 — Broker APIs
-Orders, positions, account state, idempotency and broker abstraction. Compare development/paper environments and design the IBKR adapter.
+**Build:** portfolio + risk layers between strategies and execution.
 
-### Lesson 20 — Paper trading
-Connect the research system to simulated execution and reconcile expected vs observed fills/positions.
+## Stage 5 — Research that survives contact with reality
 
-### Lesson 21 — Live execution and operations
-Operational safeguards, reconciliation, retries, kill switches, observability and controlled deployment.
+### Lesson 15 — Transaction costs and execution realism
+Commission, spread, slippage, liquidity/market impact intuition, order types and fill assumptions.
 
-**Phase output:** the same strategy interfaces can move from backtest to paper/live without embedding broker logic.
+### Lesson 16 — Biases and overfitting
+Look-ahead, survivorship, selection/data-snooping bias, repeated backtests, parameter proliferation and multiple testing.
 
-## Phase 7 — Product and AI layer
+**Evidence anchor:** Probability of Backtest Overfitting; Deflated Sharpe Ratio.
 
-### Lesson 22 — Multi-strategy orchestration and UI
-Expose the system through Python APIs and a TypeScript/React interface. Add experiment inspection, portfolio/risk views and operational monitoring.
+### Lesson 17 — Out-of-sample and walk-forward validation
+Chronological train/validation/test, expanding/rolling windows, sensitivity/stability, robustness across assets/timeframes.
 
-Evaluate AI for bounded tasks such as research synthesis, diagnostics, natural-language querying and strategy-selection support. Deterministic/statistical components remain deterministic/statistical when that is the right tool.
+### Lesson 18 — Experiment registry and strategy promotion
+Record data/version/config/trials; define promotion gates from idea → researched → validated → paper candidate.
 
-## Definition of done for a strategy
+**Stage checkpoint:** no strategy can become a paper bot without passing documented validation and risk gates.
 
-A strategy is not “done” until we can state:
-- the economic/statistical hypothesis;
-- exact information available at decision time;
-- entry, exit and sizing rules;
-- transaction-cost assumptions;
-- risk constraints;
-- in-sample vs out-of-sample procedure;
+## Stage 6 — Advanced statistical strategies
+
+### Lesson 19 — PCA, factors and statistical arbitrage
+PCA as common-factor extraction, residual/idiosyncratic returns, mean-reverting residual models and market neutrality.
+
+**Evidence anchor:** Avellaneda–Lee.
+
+### Lesson 20 — Clustering and universe construction
+Similarity metrics, clustering, universe stability and how discovery itself can overfit.
+
+### Lesson 21 — Stochastic mean reversion
+Ornstein–Uhlenbeck intuition, parameter estimation, half-life and model misspecification.
+
+## Stage 7 — Adaptive/ML systems
+
+### Lesson 22 — Regime detection
+Trend/mean-reversion, volatility and risk-off states; rule-based baseline first, then clustering/HMM-like approaches where justified.
+
+### Lesson 23 — ML foundations for trading
+Targets/labels, feature timing, leakage, class imbalance, probabilistic predictions, calibration and time-aware validation. Compare every ML model to simple baselines.
+
+### Lesson 24 — Strategy selection / meta-models
+Use observable state to allocate among already validated strategies. LLMs do not directly decide prices/orders.
+
+## Stage 8 — Real-time observation and execution engineering
+
+### Lesson 25 — Real-time market data
+Streaming/subscriptions, stale data, reconnects, clocks, state and persistence.
+
+**Product:** Market tab becomes real-time/read-only.
+
+### Lesson 26 — Broker abstraction and order lifecycle
+Orders, IDs, partial fills, cancellations, positions, account state, reconciliation, retries/idempotency.
+
+### Lesson 27 — Interactive Brokers integration
+TWS/IB Gateway concepts, API session management, account/market-data constraints and paper/live environment separation.
+
+**Build:** IBKR adapter behind the broker interface.
+
+## Stage 9 — Paper trading
+
+### Lesson 28 — Paper bot runtime
+Run independently configured strategy bots; scheduler/event loop; health/status; persisted state.
+
+### Lesson 29 — Attribution and monitoring
+P&L per bot/strategy, per asset and total; realized/unrealized P&L; orders/fills; equity curves and diagnostics.
+
+**Product:** Paper Trading + Strategies/Control tabs.
+
+### Lesson 30 — Operational safety
+Per-bot activate/deactivate, graceful stop, cancel-open-orders policy, exposure checks and global kill switch.
+
+**Exit:** extended paper-trading observation and reconciliation before any live promotion.
+
+## Stage 10 — Live observation and controlled deployment
+
+### Lesson 31 — Live read-only observation
+Connect live account state without enabling autonomous live orders.
+
+**Product:** Live Trading tab initially observation-only.
+
+### Lesson 32 — Controlled live execution
+Only after explicit user decision: credentials/secrets, deployment isolation, pre-trade risk, confirmations where appropriate, alerts, audit log, recovery and kill switches.
+
+No strategy reaches live because it “won” a backtest. Promotion is a separate governed decision.
+
+## Stage 11 — Product maturity and AI assistance
+
+### Lesson 33 — Multi-strategy orchestration
+Capital allocation among bots, aggregate risk, correlated strategies, conflicts and portfolio-level constraints.
+
+### Lesson 34 — AI-assisted research and tutoring
+AI tutor in Learn; paper/reference synthesis; experiment explanation; anomaly diagnostics. Keep deterministic risk/execution controls outside LLM authority.
+
+### Lesson 35 — Production hardening
+Observability, deployment, migrations, security, disaster recovery, data retention and reproducibility.
+
+---
+
+## Strategy definition of done
+
+A strategy must document:
+- economic/statistical hypothesis and evidence;
+- universe and data requirements;
+- exact decision-time information;
+- signal, entry/exit and sizing rules;
 - benchmark;
-- failure modes and invalidation conditions;
-- reproducible experiment configuration.
+- cost/slippage assumptions;
+- risk constraints;
+- research trials/parameters;
+- in-sample/out-of-sample protocol;
+- robustness/sensitivity;
+- failure/invalidation conditions;
+- version and reproducible configuration;
+- paper/live eligibility status.
 
-## Delivery cadence
+## Product delivery order
 
-Prefer one focused issue and PR per lesson/milestone. Large lessons can be split into theory/research and infrastructure increments, but the Git history should preserve *why* each capability was added.
+1. **Learn** — starts immediately and grows every lesson.
+2. **Market** — historical first, real-time in Stage 8; always read-only.
+3. **Paper Trading** — after broker/execution foundations.
+4. **Strategies / Control** — catalogue early; operational controls when bots exist.
+5. **Live Trading** — read-only first; execution is the final gated capability.
+
+This order deliberately makes understanding and measurement prerequisites for automation.
