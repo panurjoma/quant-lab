@@ -139,6 +139,25 @@ code/git version
 = reproducible run context
 ```
 
+## Backtest-to-live semantic parity
+
+A recurring lesson from mature trading engines is to minimize semantic divergence between simulation and execution. Quant Lab should therefore keep **strategy logic, canonical events, clock semantics, portfolio/risk decisions and order intent** common across environments. Backtest, replay, paper and live differ through clocks, data sources and execution/fill adapters—not by rewriting strategies.
+
+This does **not** imply that backtests reproduce live markets perfectly. Latency, venue behavior, transport failures, external account activity and broker reconciliation remain explicit live concerns.
+
+## Data lineage and quality
+
+Market data should eventually carry enough metadata to explain where a result came from:
+- provider/source and canonical instrument mapping;
+- event timestamp vs ingestion/observation timestamp where relevant;
+- timezone/calendar/session policy;
+- adjusted/raw and corporate-action policy;
+- missing/duplicate/out-of-order policy;
+- freshness/gap diagnostics;
+- dataset/version or reproducible query identity for experiments.
+
+Research artifacts should make these assumptions visible rather than hiding them inside adapters.
+
 ## Research and experiment identity
 
 Every meaningful backtest/experiment eventually receives an `experiment_id`. Its manifest should capture:
@@ -154,6 +173,21 @@ Every meaningful backtest/experiment eventually receives an `experiment_id`. Its
 - creation timestamp and result artifacts.
 
 This lets Learn link a lesson directly to the experiment that demonstrated—or falsified—the concept.
+
+### Standard research report / tear sheet
+
+Comparable experiments should render a common report containing, as appropriate:
+- benchmark and cumulative/equity curves;
+- drawdown depth/duration;
+- rolling volatility and risk-adjusted metrics;
+- exposure, leverage and turnover;
+- commissions/slippage/fees;
+- trade-level and period-level diagnostics kept semantically distinct;
+- parameter/configuration summary;
+- in-sample vs out-of-sample/walk-forward partitions;
+- sensitivity/parameter-surface views when optimization was performed.
+
+Optimization outputs must expose the search space and number of trials; a best historical parameter set is not treated as evidence by itself.
 
 ## Strategy, bot and run identity
 
@@ -226,6 +260,14 @@ Observability should use structured logs/metrics and feed UI health indicators w
 - **Attribution:** tag financial events by environment, bot, strategy version and asset.
 - **Bot runtime:** independent configured strategy instances with lifecycle/health.
 
+## Research acceleration without changing semantics
+
+Quant Lab may use **vectorized/batched research paths** for feature computation, cross-sectional work and large experiment grids, but these are research accelerators. Any strategy promoted toward paper trading must be reproducible under the canonical event/order semantics. This prevents a fast research-only implementation from silently defining different trading behavior.
+
+## Performance and benchmarking
+
+Correctness comes first, but mature quant systems also measure performance. Add benchmarks only when a hot path exists, for example data normalization, feature calculation, parameter sweeps, event replay or attribution. Track representative dataset size, runtime and memory so optimization work is evidence-driven.
+
 ## Testing architecture
 
 Use a trading-specific test pyramid:
@@ -248,6 +290,8 @@ few         End-to-end tests
 ```
 
 Normal unit tests must not require external platforms, credentials or network access.
+
+Use deterministic **synthetic market fixtures** for timing, fills, corporate-action/data-quality edge cases and regression tests. Connector tests verify translation to/from those canonical contracts. CI should eventually gate merges on unit/quantitative tests and critical static/security checks.
 
 ## Target repository structure
 
@@ -295,6 +339,16 @@ quant-lab/
 ```
 
 This is the destination, **not Lesson 1 scaffolding**. Create directories/modules only when a lesson uses them.
+
+## CI, packaging and reproducible environments
+
+As implementation matures, repository engineering should include:
+- pinned/locked dependencies and supported Python/runtime versions;
+- CI for tests, lint/type checks and critical security/dependency checks;
+- coverage visibility for important quantitative/domain code;
+- reproducible local/container environment when external services make setup non-trivial;
+- changelog/migration notes once persisted schemas or public contracts exist;
+- performance regression benchmarks only for demonstrated hot paths.
 
 ## Safety lifecycle
 
