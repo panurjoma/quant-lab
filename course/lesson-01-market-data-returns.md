@@ -7,7 +7,7 @@ A strategy cannot be more trustworthy than the information it consumes. Before p
 By the end of this lesson you should be able to explain an OHLCV bar, distinguish a vendor ticker from canonical instrument identity, explain why timestamps must be explicit, calculate simple/log returns, and reject malformed time series.
 
 ## Core ideas
-An OHLCV bar summarizes **open, high, low, close and volume** over a stated interval. It is an aggregation, not the complete sequence of trades inside the interval.
+An OHLCV bar summarizes **open, high, low, close and volume** over a stated interval. It is an aggregation, not the complete sequence of trades inside the interval. Quant Lab stores the bar's start timestamp **and duration**, so the interval end is explicit; the full bar is not knowable until that end.
 
 A ticker such as `AAPL` is not enough as durable identity: venue, asset class and currency can matter. Quant Lab therefore maps vendor identifiers into its own canonical `Instrument`.
 
@@ -20,6 +20,9 @@ For consecutive prices `P[t-1]` and `P[t]`:
 - log return: `g[t] = ln(P[t] / P[t-1])`
 
 Example: 100 → 110 gives a simple return of 10% and log return of about 9.53%.
+
+## Missing-data policy
+A gap is not automatically zero activity and must not be silently forward-filled. Mature research systems make alignment/fill policy explicit. Quant Lab starts conservatively: validation detects structural problems and later provider/session-aware lessons will decide whether a timestamp is actually missing.
 
 ## Data-quality checks
 Quant Lab rejects non-finite/non-positive prices, negative volume, impossible OHLC relationships, duplicate bars and out-of-order bars. Missing bars require an explicit policy rather than silent invention.
@@ -37,3 +40,9 @@ Use `data/lesson-01/sample_bars.csv`. Inspect the close series, calculate both r
 
 ## Capability unlocked
 The application can now represent, validate and visualize deterministic historical bars and calculate returns. Real-time data, external connectors and execution remain locked.
+
+
+## Open-source implementation review
+Before finalizing this lesson we compared the relevant market-data implementations in QuantConnect LEAN, NautilusTrader, Zipline, VectorBT and backtesting.py. The useful concepts retained for this small milestone were: persistent instrument identity rather than ticker-only identity; timezone-aware time-series; explicit bar interval/end semantics; explicit missing-data policy; immutable canonical domain records; and separation of provider data from strategy/research code.
+
+We deliberately deferred exchange calendars, corporate-action engines, tick/quote hierarchies, symbol mapping histories and high-performance array/event machinery because Lesson 1 does not yet need them.
