@@ -7,7 +7,7 @@ from quant_lab.domain import AssetClass, Bar, Instrument, validate_bars
 
 def bar(hour: int, **overrides) -> Bar:
     values = dict(instrument_id="AAPL.XNAS", timestamp=datetime(2026, 1, 2, hour, tzinfo=timezone.utc),
-                  open=100.0, high=102.0, low=99.0, close=101.0, volume=1000.0)
+                  duration_seconds=3600, open=100.0, high=102.0, low=99.0, close=101.0, volume=1000.0)
     values.update(overrides)
     return Bar(**values)
 
@@ -15,6 +15,15 @@ def bar(hour: int, **overrides) -> Bar:
 def test_instrument_requires_canonical_identity() -> None:
     instrument = Instrument("AAPL.XNAS", "AAPL", AssetClass.EQUITY, "USD", "XNAS")
     assert instrument.instrument_id == "AAPL.XNAS"
+
+
+def test_bar_has_explicit_interval_end() -> None:
+    assert bar(10).end_timestamp == datetime(2026, 1, 2, 11, tzinfo=timezone.utc)
+
+
+def test_bar_rejects_nonpositive_duration() -> None:
+    with pytest.raises(ValueError, match="duration"):
+        bar(10, duration_seconds=0)
 
 
 def test_bar_requires_timezone() -> None:
