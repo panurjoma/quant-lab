@@ -35,6 +35,7 @@ class Instrument:
 class Bar:
     instrument_id: str
     timestamp: datetime
+    duration_seconds: int
     open: float
     high: float
     low: float
@@ -44,6 +45,8 @@ class Bar:
     def __post_init__(self) -> None:
         if self.timestamp.tzinfo is None or self.timestamp.utcoffset() is None:
             raise ValueError("bar timestamp must be timezone-aware")
+        if self.duration_seconds <= 0:
+            raise ValueError("bar duration must be positive")
         values = (self.open, self.high, self.low, self.close, self.volume)
         if not all(isfinite(v) for v in values):
             raise ValueError("bar values must be finite")
@@ -55,6 +58,13 @@ class Bar:
             raise ValueError("OHLC values are inconsistent")
         if self.high < self.low:
             raise ValueError("high cannot be below low")
+
+
+    @property
+    def end_timestamp(self) -> datetime:
+        """Exclusive end of the interval summarized by this bar."""
+        from datetime import timedelta
+        return self.timestamp + timedelta(seconds=self.duration_seconds)
 
 
 def validate_bars(bars: Iterable[Bar]) -> tuple[Bar, ...]:
