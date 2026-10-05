@@ -1,0 +1,20 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "quant-lab"
+version = "0.1.0"
+description = "AI-assisted systematic trading learning and research laboratory"
+requires-python = ">=3.12"
+dependencies = ["pandas>=2.2,<3", "numpy>=2.0,<3"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<9", "jupyterlab>=4,<5"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/quant_lab"]
