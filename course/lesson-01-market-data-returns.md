@@ -33,6 +33,10 @@ Splits and distributions can make raw historical prices jump even when investor 
 ## Experiment
 Use `data/lesson-01/sample_bars.csv`. Inspect the close series, calculate both return definitions, and verify the 100 → 110 example manually before trusting the function.
 
+The Learn interface provides five navigable chapters, an interval/availability inspector, three compounding examples, a cost-sensitive causal-versus-biased experiment, and five questions with answer feedback. See the [worked lab guide and answer rubric](lesson-01-lab-guide.md) and [source review with an end-to-end LEAN trace](lesson-01-source-review.md).
+
+This small experiment is a didactic preview of later statistics/backtesting lessons. It uses invented bars and does not establish a validated trading strategy. Python generates the results; React presents them through a versioned offline data contract.
+
 ## Challenge
 1. Why is a timestamp without timezone dangerous?
 2. If a daily bar closes at 16:00, can a strategy placing an order at 15:59 use that close?
