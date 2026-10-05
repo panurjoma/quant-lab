@@ -34,6 +34,11 @@ Do not optimize for impressive historical returns. Optimize for **correctness, t
 11. Strategy parameters, universes and risk settings belong in explicit configuration rather than unexplained constants.
 12. Preserve strategy, bot, run and experiment identity so results remain attributable and reproducible.
 13. Do not create target-architecture directories/modules until the current lesson has a concrete use for them.
+14. Preserve strategy semantics across backtest/replay/paper/live; environment-specific behavior belongs in clocks, data and execution adapters.
+15. Record data lineage/quality assumptions when they can affect a result.
+16. Optimization/parameter sweeps must record the search space and trials; never present the best trial alone as validation.
+17. Keep trade-level metrics distinct from period-return metrics.
+18. Prefer deterministic synthetic fixtures for timing/fill/data-quality edge cases before connector-dependent tests.
 
 ## Agent behavior
 
