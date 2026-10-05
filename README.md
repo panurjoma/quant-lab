@@ -124,6 +124,8 @@ market/account    research/data                 paper -> later live
 
 The rest of Quant Lab consumes **normalized internal models**, not vendor-specific objects.
 
+Research may use fast vectorized/batched computation, but strategies promoted toward paper/live must preserve the same canonical clock/event/order semantics. Experiments carry data lineage and reproducible configuration, and comparable results converge on standard tear sheets rather than isolated headline returns.
+
 ## Learning philosophy
 
 ```text
