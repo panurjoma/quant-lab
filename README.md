@@ -191,3 +191,27 @@ This is a **target architecture, not initial scaffolding**. Components/directori
 It establishes the Python package/tests, canonical OHLCV/time models, simple/log returns, validation and a **provider abstraction designed for the two v1 connectors: IBKR and QuantConnect**. The lesson does not need to fully integrate both external APIs immediately; it establishes the contract they will later implement.
 
 The first UI increment is the minimal **Learn** shell. Other tabs unlock only when their prerequisites exist.
+
+
+## Run Lesson 1
+
+Python research/tests:
+
+```bash
+python -m venv .venv
+# activate the environment, then:
+pip install -e ".[dev]"
+pytest
+```
+
+Learn UI:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Lesson content: [course/lesson-01-market-data-returns.md](course/lesson-01-market-data-returns.md).
+
+At this milestone the **Learn** surface and deterministic historical-data visualization are available. Market real-time, IBKR/QuantConnect connectivity, Paper Trading, Live Trading and runtime controls remain locked until their roadmap prerequisites are implemented.
