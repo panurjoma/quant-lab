@@ -25,9 +25,9 @@ Mean/variance/std, distributions, compounding, covariance/correlation, volatilit
 **Why now:** we need a language for evaluating every later strategy.
 
 ### Lesson 3 — Backtesting mechanics before strategies
-Information sets, lagging, event/order timing, fills, fees, bid/ask spread, slippage, turnover, warm-up, survivorship/corporate-action concepts.
+Information sets, lagging, event/order timing, fills, fees, bid/ask spread, slippage, turnover, warm-up, survivorship/corporate-action concepts. Establish the principle that the **same strategy contract and clock/event semantics should survive backtest → replay → paper → live**, while execution adapters change.
 
-**Build:** deliberately small baseline backtest/event contract; benchmark buy-and-hold experiment.  
+**Build:** deliberately small baseline backtest/event contract; benchmark buy-and-hold experiment; deterministic synthetic fixtures that require no external data.  
 **Exit:** explain why a backtest can be wrong even when code is correct.
 
 ## Stage 2 — First strategy families
@@ -86,7 +86,7 @@ Momentum, value, size, quality/profitability, investment and low-volatility conc
 Weights, long/short vs long-only, diversification, covariance, constraints, rebalancing and turnover.
 
 ### Lesson 14 — Risk management and sizing
-Volatility targeting, concentration, exposure, drawdown, position sizing, risk budgets and leverage/margin concepts.
+Volatility targeting, concentration, exposure, drawdown, position sizing, risk budgets and leverage/margin concepts. Add **tail-risk measures** (VaR/CVaR/Expected Shortfall intuition) and **Monte Carlo/bootstrap stress analysis** as risk tools, not return-prediction tools.
 
 **Build:** portfolio + risk layers between strategies and execution.
 
@@ -100,11 +100,11 @@ Look-ahead, survivorship, selection/data-snooping bias, repeated backtests, para
 
 **Evidence anchor:** Probability of Backtest Overfitting; Deflated Sharpe Ratio.
 
-### Lesson 17 — Out-of-sample and walk-forward validation
-Chronological train/validation/test, expanding/rolling windows, sensitivity/stability, robustness across assets/timeframes.
+### Lesson 17 — Out-of-sample, walk-forward and parameter robustness
+Chronological train/validation/test, expanding/rolling windows, sensitivity/stability, robustness across assets/timeframes. Visualize parameter surfaces/heatmaps and prefer broad stable regions over isolated historical optima; optimization is a research tool, never proof of edge.
 
-### Lesson 18 — Experiment registry and strategy promotion
-Introduce experiment IDs/manifests capturing Git/code version, strategy/config version, data identity/range, universe, costs, split, metrics and artifacts. Define promotion gates from idea → researched → validated → paper candidate.
+### Lesson 18 — Experiment registry, tear sheets and strategy promotion
+Introduce experiment IDs/manifests capturing Git/code version, strategy/config version, data identity/range, universe, costs, split, metrics and artifacts. Produce a standard **strategy tear sheet** with benchmark comparison, equity curve, drawdowns, rolling risk/return, exposure, turnover, costs and trade/period diagnostics. Define promotion gates from idea → researched → validated → paper candidate.
 
 **Stage checkpoint:** no strategy can become a paper bot without passing documented validation and risk gates.
 
@@ -135,12 +135,12 @@ Use observable state to allocate among already validated strategies. LLMs do not
 ## Stage 8 — Real-time observation and execution engineering
 
 ### Lesson 25 — Real-time market data
-Streaming/subscriptions, stale data, reconnects, clocks, state and persistence. Use the supported capabilities of the two v1 connectors only: IBKR and QuantConnect. Normalize vendor data before it reaches the domain.
+Streaming/subscriptions, stale data, reconnects, clocks, state and persistence. Introduce **data lineage and quality telemetry**: source, ingestion time, event time, freshness, gaps, duplicates and normalization/corporate-action policy. Use the supported capabilities of the two v1 connectors only: IBKR and QuantConnect. Normalize vendor data before it reaches the domain.
 
 **Product:** Market tab becomes real-time/read-only where the configured connector/data entitlement supports real-time delivery.
 
 ### Lesson 26 — Broker abstraction and order lifecycle
-Orders, IDs, partial fills, cancellations, positions, account state, reconciliation, retries/idempotency.
+Orders, IDs, partial fills, cancellations, positions, account state, reconciliation, retries/idempotency. Cover practical order semantics needed for realistic simulation/execution: market/limit/stop, time-in-force, rejection/cancel states and deterministic fill-model contracts.
 
 ### Lesson 27 — External platform integrations
 **IBKR:** TWS/IB Gateway concepts, API session management, market/account data, order lifecycle and paper/live separation.  
@@ -184,7 +184,7 @@ Capital allocation among bots, aggregate risk, correlated strategies, conflicts 
 AI tutor in Learn; paper/reference synthesis; experiment explanation; anomaly diagnostics. Keep deterministic risk/execution controls outside LLM authority.
 
 ### Lesson 35 — Production hardening
-Observability, deployment, migrations, security, disaster recovery, data retention and reproducibility.
+Observability, deployment, migrations, security, disaster recovery, data retention and reproducibility. Add **CI quality gates**, coverage for critical quantitative logic, dependency/security checks, environment/container reproducibility, performance benchmarks for hot paths and documented recovery/runbooks.
 
 ---
 
