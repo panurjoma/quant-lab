@@ -385,3 +385,32 @@ Python domain/research/API/connectors; FastAPI candidate; TypeScript + React UI;
 ## Incremental implementation rule
 
 Architecture should guide implementation without creating speculative enterprise scaffolding. Lesson 1 introduces only what it genuinely needs: initial instrument/data/time concepts, provider ports, return calculations, tests, research environment and minimal Learn UI. Later lessons grow events, experiments, persistence, bots and operations when their use cases become concrete.
+
+
+## Decision: LEAN is the external execution engine
+
+Quant Lab is the control plane and educational product; LEAN is the engine boundary for production-grade backtests and, later, paper/live execution. This decision avoids rebuilding mature event, portfolio, order, fill, fee, slippage, brokerage and statistics machinery while preserving Quant Lab's vendor-neutral domain and UI.
+
+The boundary is process/container based:
+
+```text
+Learn / Research / Control UI
+            |
+      Quant Lab API
+            |
+   run specification + adapter
+            |
+ LEAN process/container (pinned)
+            |
+ normalized events/results
+            |
+ experiment registry / interpretation
+```
+
+Quant Lab owns lesson content, hypotheses, strategy metadata, experiment identity, promotion gates, run orchestration, result interpretation and UI. LEAN owns its event loop, subscriptions, securities/portfolio state, transaction handling, reality models and engine statistics. Strategies do not call QuantConnect Cloud or broker APIs directly.
+
+The small Python simulator used by early lessons remains an explainable reference implementation. It supports hand calculations and causality tests. A strategy becomes paper-eligible only after its behavior is reproduced through the pinned LEAN adapter and any material semantic differences are explained.
+
+The upstream snapshot and provenance are defined in `integrations/lean/lean.lock.json`. Updating it is a reviewed dependency change, never an implicit pull from `master`. QuantConnect Cloud and LEAN CLI are optional delivery conveniences; the core architecture must remain capable of invoking the open-source engine without making a paid cloud tier a domain dependency.
+
+See `docs/adr/0001-lean-execution-engine.md` for consequences and rollout.

@@ -97,3 +97,22 @@ Only after these foundations do we evaluate the first strategy family.
 Trend/momentum -> breakout -> mean reversion -> relative value/pairs -> cointegration -> factors/portfolios -> advanced stat-arb -> regimes/ML -> strategy allocation.
 
 This ordering moves from simple observable price transformations to statistical relationships, then multivariate/adaptive models, while the validation framework grows alongside them.
+
+
+## LEAN-backed learning method
+
+LEAN is the principal executable reference for the course, but its implementation is studied through a finance-first lens. Each applicable lesson follows this loop:
+
+```text
+financial question
+ -> LEAN public API and engine trace
+ -> state/timing/accounting invariants
+ -> minimal Quant Lab reproduction
+ -> LEAN execution comparison
+ -> financial interpretation
+ -> failure modes and exercise
+```
+
+A source trace is not complete until it explains what information was available, when an order could be created and filled, how cash/holdings/costs changed, and which result would differ under another realistic assumption. Exact paths are linked at the pinned SHA from `integrations/lean/lean.lock.json`.
+
+See [`lean-source-study.md`](lean-source-study.md) for the component map and lesson template.

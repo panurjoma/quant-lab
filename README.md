@@ -218,3 +218,12 @@ Lesson content: [course/lesson-01-market-data-returns.md](course/lesson-01-marke
 Worked experiments, regeneration instructions and answer rubric: [Lesson 1 lab guide](course/lesson-01-lab-guide.md). Source decisions and the LEAN trace: [implementation review](course/lesson-01-source-review.md).
 
 At this milestone the **Learn** surface and deterministic historical-data visualization are available. Market real-time, IBKR/QuantConnect connectivity, Paper Trading, Live Trading and runtime controls remain locked until their roadmap prerequisites are implemented.
+
+
+## LEAN execution-engine direction
+
+Quant Lab uses [QuantConnect LEAN](https://github.com/QuantConnect/Lean) as its external backtest/live execution engine while Quant Lab remains the product and learning control plane. LEAN is pinned to the immutable upstream snapshot `80e7843f645673bcbeaab963049f76f20f6785e1` captured on 2026-10-06; the machine-readable pin is in [`integrations/lean/lean.lock.json`](integrations/lean/lean.lock.json).
+
+The current Python Lesson 1 simulator remains a deliberately small, hand-checkable teaching oracle. It is not intended to grow into a competing production trading engine. Later lessons will submit equivalent strategies to LEAN through an adapter, normalize the resulting orders/fills/equity/statistics, and explain financially meaningful differences.
+
+See [ADR 0001](docs/adr/0001-lean-execution-engine.md), the [LEAN integration contract](integrations/lean/README.md), [LEAN source-study method](course/lean-source-study.md), and [third-party notices](THIRD_PARTY_NOTICES.md).

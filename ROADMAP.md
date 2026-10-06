@@ -218,3 +218,16 @@ Tabs are unlocked by course capabilities rather than all being built upfront:
 V1 external financial-platform connectors are **IBKR + QuantConnect only**. Additional providers are intentionally out of scope until there is a demonstrated need.
 
 This order deliberately makes understanding and measurement prerequisites for automation.
+
+
+## LEAN integration track across the roadmap
+
+LEAN is introduced incrementally rather than deferred to the final integration lesson:
+
+- **Lessons 1–3:** trace bars, subscriptions, time, returns, fills, fees, slippage, portfolio accounting and statistics; retain the small Python simulator as a hand-checkable oracle.
+- **Lessons 4–14:** express strategies through LEAN's Algorithm Framework where its separation fits: Universe -> Alpha -> Portfolio Construction -> Risk -> Execution. Use classic/hybrid algorithms when the finance logic cannot be separated honestly.
+- **Lessons 15–18:** run reproducible LEAN experiments and normalize orders, fills, equity, drawdown, costs and statistics into the Quant Lab experiment contract.
+- **Lessons 25–30:** add the supervised LEAN runtime adapter, IBKR paper integration, reconciliation, monitoring and kill controls.
+- **Live stages:** reuse the validated strategy/run contract; live remains disabled by default and requires an explicit promotion decision.
+
+The immutable initial upstream snapshot is `80e7843f645673bcbeaab963049f76f20f6785e1` (2026-10-06). A pin update is a dedicated reviewed change with contract tests and migration notes.

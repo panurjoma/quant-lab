@@ -95,3 +95,23 @@ Use `ranaroussi/quantstats` as an additional specialist reference when the work 
 10. If the five projects disagree, prefer the simplest approach that preserves correctness for the current milestone; document a consequential trade-off.
 
 The benchmark check is a **design review gate, not a dependency requirement**. Quant Lab should remain intentionally smaller and easier to understand than these frameworks.
+
+
+## LEAN integration and lesson trace rule
+
+LEAN is an external engine dependency, not source to paste into Quant Lab. The authoritative pin is `integrations/lean/lean.lock.json`.
+
+For every lesson that maps to LEAN:
+
+1. Inspect the pinned commit, not moving `master`.
+2. Trace the relevant public algorithm API into the engine/framework implementation, tests and example algorithms.
+3. Record the financial meaning, information timing, state transitions, assumptions and failure modes—not merely class names.
+4. Build the smallest original Quant Lab example that demonstrates the concept.
+5. Compare the hand-checkable Quant Lab result with LEAN behavior before paper eligibility.
+6. Explain differences in fills, fees, slippage, warm-up, normalization, portfolio accounting or statistics.
+7. Link exact upstream paths at the pinned SHA so lesson evidence remains reproducible.
+8. Do not copy community/forum algorithms unless their licence is independently verified.
+9. If LEAN code is copied or modified, preserve headers, mark modifications, and update `THIRD_PARTY_NOTICES.md` and the vendored Apache licence material.
+10. Treat QuantConnect data, cloud services, names and marks as separate from the Apache-licensed engine.
+
+Changing the LEAN pin requires reviewing upstream changes, running adapter/contract tests and recording migration notes.
