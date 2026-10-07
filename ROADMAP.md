@@ -129,6 +129,18 @@ Trend/mean-reversion, volatility and risk-off states; rule-based baseline first,
 ### Lesson 23 — ML foundations for trading
 Targets/labels, feature timing, leakage, class imbalance, probabilistic predictions, calibration and time-aware validation. Compare every ML model to simple baselines.
 
+### Advanced case study after Lesson 23 — Kronos financial foundation model
+
+Study OHLC(V/amount) tokenization and autoregressive forecasting; preserve sampled future paths, measure calibration and translate forecasts into a falsifiable signal evaluated in LEAN. Prerequisites: data/timing, costs/risk, walk-forward validation and experiment identity (Lessons 1–3, 14–18, 23).
+
+**Pinned source:** [shiyu-coder/Kronos@67b630e67f6a18c9e9be918d9b4337c960db1e9a](https://github.com/shiyu-coder/Kronos/tree/67b630e67f6a18c9e9be918d9b4337c960db1e9a), latest `master` commit checked 2026-10-07, committed 2026-04-13 12:38:49 UTC. No GitHub releases were published at the check; this is an immutable source snapshot. Pin model and tokenizer weights separately before execution.
+
+**Build progressively:** source-study lesson -> optional offline inference adapter -> retained paths and probabilistic evaluation -> costed LEAN experiment -> separate paper review. Start with small, one asset/timeframe and bounded horizons. Upstream `sample_count > 1` averages paths, so retain individual seeded draws before computing percentiles. Kronos is a model dependency; the v1 financial connectors remain IBKR + QuantConnect.
+
+**Exit:** demonstrate admissible information timing, benchmark comparison, interval coverage, untouched holdout, cost sensitivity, pretraining-overlap limitations and reproducible provenance. No automatic paper/live promotion.
+
+**Detailed design and acceptance criteria:** [Kronos integration plan](docs/kronos-integration-plan.md). This case study is planned; no inference/runtime capability is enabled by the documentation change.
+
 ### Lesson 24 — Strategy selection / meta-models
 Use observable state to allocate among already validated strategies. LLMs do not directly decide prices/orders.
 
