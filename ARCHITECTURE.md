@@ -414,3 +414,10 @@ The small Python simulator used by early lessons remains an explainable referenc
 The upstream snapshot and provenance are defined in `integrations/lean/lean.lock.json`. Updating it is a reviewed dependency change, never an implicit pull from `master`. QuantConnect Cloud and LEAN CLI are optional delivery conveniences; the core architecture must remain capable of invoking the open-source engine without making a paid cloud tier a domain dependency.
 
 See `docs/adr/0001-lean-execution-engine.md` for consequences and rollout.
+
+
+## Planned Kronos research boundary
+
+Kronos is an optional isolated Python inference dependency producing versioned forecast artifacts. It does not change the two v1 financial connectors or LEAN's execution responsibility. Canonical completed bars and an explicit information cutoff enter the adapter; retained sampled paths and provenance leave it. Original signal rules, portfolio construction and independent risk controls translate forecasts into LEAN experiments. React renders the results. Model loading stays outside engine event callbacks, and forecast availability includes declared inference latency.
+
+The [Kronos integration plan](docs/kronos-integration-plan.md) records the immutable source pin, separate checkpoint-version requirements, sampling API caveat, validation protocol and staged rollout. No runtime module or new dependency is introduced until the advanced lesson requires it.
