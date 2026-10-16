@@ -243,3 +243,7 @@ LEAN is introduced incrementally rather than deferred to the final integration l
 - **Live stages:** reuse the validated strategy/run contract; live remains disabled by default and requires an explicit promotion decision.
 
 The immutable initial upstream snapshot is `80e7843f645673bcbeaab963049f76f20f6785e1` (2026-10-06). A pin update is a dedicated reviewed change with contract tests and migration notes.
+
+## Optional financial intelligence / MCP track (prerequisite-gated)
+
+After canonical data/timing foundations, study read-only MCP adapters for news and fundamentals, initially with synthetic fixtures and offline contract tests. Evaluate AI-derived news features only through chronological, cost-aware research before paper use. LSEG is an optional future provider subject to server-license, data-entitlement and pricing verification; no new v1 financial-platform connector or execution capability is approved. See [MCP financial intelligence plan](docs/mcp-financial-intelligence-plan.md).
