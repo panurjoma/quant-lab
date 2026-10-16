@@ -190,4 +190,40 @@ This is a **target architecture, not initial scaffolding**. Components/directori
 
 It establishes the Python package/tests, canonical OHLCV/time models, simple/log returns, validation and a **provider abstraction designed for the two v1 connectors: IBKR and QuantConnect**. The lesson does not need to fully integrate both external APIs immediately; it establishes the contract they will later implement.
 
-The first UI increment is the minimal **Learn** shell. Other tabs unlock only when their prerequisites exist.
+The **Learn** application contains five interactive Lesson 1 chapters: bar timing, return measurement, a backtest audit, explained knowledge checks, and evidence. It includes deterministic Python-generated experiments with explicit costs and a deliberately future-informed comparison. Other tabs unlock only when their prerequisites exist.
+
+
+## Run Lesson 1
+
+Python research/tests:
+
+```bash
+python -m venv .venv
+# activate the environment, then:
+pip install -e ".[dev]"
+pytest
+python -m quant_lab.research.lesson_one --check
+```
+
+Learn UI:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Lesson content: [course/lesson-01-market-data-returns.md](course/lesson-01-market-data-returns.md).
+
+Worked experiments, regeneration instructions and answer rubric: [Lesson 1 lab guide](course/lesson-01-lab-guide.md). Source decisions and the LEAN trace: [implementation review](course/lesson-01-source-review.md).
+
+At this milestone the **Learn** surface and deterministic historical-data visualization are available. Market real-time, IBKR/QuantConnect connectivity, Paper Trading, Live Trading and runtime controls remain locked until their roadmap prerequisites are implemented.
+
+
+## LEAN execution-engine direction
+
+Quant Lab uses [QuantConnect LEAN](https://github.com/QuantConnect/Lean) as its external backtest/live execution engine while Quant Lab remains the product and learning control plane. LEAN is pinned to the immutable upstream snapshot `80e7843f645673bcbeaab963049f76f20f6785e1` captured on 2026-10-06; the machine-readable pin is in [`integrations/lean/lean.lock.json`](integrations/lean/lean.lock.json).
+
+The current Python Lesson 1 simulator remains a deliberately small, hand-checkable teaching oracle. It is not intended to grow into a competing production trading engine. Later lessons will submit equivalent strategies to LEAN through an adapter, normalize the resulting orders/fills/equity/statistics, and explain financially meaningful differences.
+
+See [ADR 0001](docs/adr/0001-lean-execution-engine.md), the [LEAN integration contract](integrations/lean/README.md), [LEAN source-study method](course/lean-source-study.md), and [third-party notices](THIRD_PARTY_NOTICES.md).

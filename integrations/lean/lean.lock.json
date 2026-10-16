@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "upstream": "https://github.com/QuantConnect/Lean",
+  "ref_type": "commit",
+  "commit": "80e7843f645673bcbeaab963049f76f20f6785e1",
+  "commit_date": "2026-10-06T17:34:53Z",
+  "captured_date": "2026-10-06",
+  "default_branch": "master",
+  "license": "Apache-2.0",
+  "license_path": "third_party/licenses/LEAN-APACHE-2.0.txt",
+  "note": "QuantConnect/Lean does not publish current GitHub releases; v2.4.0.1 is the latest release object but dates to 2017. This immutable master snapshot is the current upstream state captured on the stated date."
+}

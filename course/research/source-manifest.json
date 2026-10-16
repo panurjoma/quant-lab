@@ -1,0 +1,476 @@
+{
+  "research_date": "2026-10-05",
+  "method": "Selected primary source review; external suites not run",
+  "ranking_scope": "Union of first 20 star-sorted results from five stated GitHub topics",
+  "top_ten": [
+    {
+      "repo": "openbq-org/OpenBB",
+      "stars": 73872,
+      "description": "Open Data Platform for analysts, quants and AI agents.",
+      "archived": false,
+      "license": "NOASSERTION",
+      "branch": "develop",
+      "updated": "2026-10-02T04:55:27Z"
+    },
+    {
+      "repo": "ZhuLinsen/daily_stock_analysis",
+      "stars": 65922,
+      "description": "LLM 驱动的多市场股票智能分析系统：多源行情、实时新闻、决策看板与自动推送，支持零成本定时运行。  LLM-powered multi-market stock analysis system with multi-source market data, real-time news, decision dashboard, automated notifications, and cost-free scheduled runs.",
+      "archived": false,
+      "license": "MIT",
+      "branch": "main",
+      "updated": "2026-10-05T07:52:27Z"
+    },
+    {
+      "repo": "freqtrade/freqtrade",
+      "stars": 55049,
+      "description": "Free, open source crypto trading bot",
+      "archived": false,
+      "license": "GPL-3.0",
+      "branch": "develop",
+      "updated": "2026-10-05T18:37:19Z"
+    },
+    {
+      "repo": "microsoft/qlib",
+      "stars": 49156,
+      "description": "Qlib is an AI-oriented Quant investment platform that aims to use AI tech to empower Quant Research, from exploring ideas to implementing productions. Qlib supports diverse ML modeling paradigms, including supervised learning, market dynamics modeling, and RL, and is now equipped with https://github.com/microsoft/RD-Agent to automate R&D process.",
+      "archived": false,
+      "license": "MIT",
+      "branch": "main",
+      "updated": "2026-10-05T16:37:16Z"
+    },
+    {
+      "repo": "HKUDS/Vibe-Trading",
+      "stars": 34783,
+      "description": "\"Vibe-Trading: Your Personal Trading Agent\"",
+      "archived": false,
+      "license": "MIT",
+      "branch": "main",
+      "updated": "2026-10-05T17:38:31Z"
+    },
+    {
+      "repo": "Fincept-Corporation/FinceptTerminal",
+      "stars": 32209,
+      "description": "FinceptTerminal is a modern finance application offering advanced market analytics, investment research, and economic data tools, designed for interactive exploration and data-driven decision-making in a user-friendly environment.",
+      "archived": false,
+      "license": "NOASSERTION",
+      "branch": "main",
+      "updated": "2026-10-01T08:59:02Z"
+    },
+    {
+      "repo": "wilsonfreitas/awesome-quant",
+      "stars": 29964,
+      "description": "A curated list of insanely awesome libraries, packages and resources for Quants (Quantitative Finance)",
+      "archived": false,
+      "branch": "main",
+      "updated": "2026-10-05T01:28:04Z"
+    },
+    {
+      "repo": "mementum/backtrader",
+      "stars": 23400,
+      "description": "Python Backtesting library for trading strategies",
+      "archived": false,
+      "license": "GPL-3.0",
+      "branch": "master",
+      "updated": "2024-08-19T17:47:36Z"
+    },
+    {
+      "repo": "QuantConnect/Lean",
+      "stars": 21864,
+      "description": "Lean Algorithmic Trading Engine by QuantConnect (Python, C#)",
+      "archived": false,
+      "license": "Apache-2.0",
+      "branch": "master",
+      "updated": "2026-10-05T17:19:28Z"
+    },
+    {
+      "repo": "stefan-jansen/machine-learning-for-trading",
+      "stars": 21235,
+      "description": "Code for Machine Learning for Trading, 3rd edition — from data sourcing to live execution.",
+      "archived": false,
+      "license": "MIT",
+      "branch": "main",
+      "updated": "2026-10-04T13:24:46Z"
+    }
+  ],
+  "sources": [
+    {
+      "repo": "openbq-org/OpenBB",
+      "path": "README.md",
+      "revision": "ae0268771f761b036996d81bd21522ce79d95415",
+      "url": "https://github.com/openbq-org/OpenBB/blob/ae0268771f761b036996d81bd21522ce79d95415/README.md",
+      "inspection": "selected material read; no runtime validation"
+    },
+    {
+      "repo": "ZhuLinsen/daily_stock_analysis",
+      "path": "docs/multi-strategy-contract.md",
+      "revision": "ce364e457aab288863a5707e7b3df79786ad07f2",
+      "url": "https://github.com/ZhuLinsen/daily_stock_analysis/blob/ce364e457aab288863a5707e7b3df79786ad07f2/docs/multi-strategy-contract.md",
+      "inspection": "selected material read; no runtime validation"
+    },
+    {
+      "repo": "freqtrade/freqtrade",
+      "path": "docs/lookahead-analysis.md",
+      "revision": "a859a8f6e02133be0e291db685a5cb92438fb505",
+      "url": "https://github.com/freqtrade/freqtrade/blob/a859a8f6e02133be0e291db685a5cb92438fb505/docs/lookahead-analysis.md",
+      "inspection": "selected material read; no runtime validation"
+    },
+    {
+      "repo": "freqtrade/freqtrade",
+      "path": "docs/recursive-analysis.md",
+      "revision": "a859a8f6e02133be0e291db685a5cb92438fb505",
+      "url": "https://github.com/freqtrade/freqtrade/blob/a859a8f6e02133be0e291db685a5cb92438fb505/docs/recursive-analysis.md",
+      "inspection": "selected material read; no runtime validation"
+    },
+    {
+      "repo": "microsoft/qlib",
+      "path": "docs/component/workflow.rst",
+      "revision": "be725493eb1a6bbb42bf11b37aa7669f59610ff1",
+      "url": "https://github.com/microsoft/qlib/blob/be725493eb1a6bbb42bf11b37aa7669f59610ff1/docs/component/workflow.rst",
+      "inspection": "selected material read; no runtime validation"
+    },
+    {
+      "repo": "microsoft/qlib",
+      "path": "examples/benchmarks/LightGBM/workflow_config_lightgbm_Alpha158.yaml",
+      "revision": "be725493eb1a6bbb42bf11b37aa7669f59610ff1",
+      "url": "https://github.com/microsoft/qlib/blob/be725493eb1a6bbb42bf11b37aa7669f59610ff1/examples/benchmarks/LightGBM/workflow_config_lightgbm_Alpha158.yaml",
+      "inspection": "selected material read; no runtime validation"
+    },
+    {
+      "repo": "HKUDS/Vibe-Trading",
+      "path": "agent/backtest/constraints.py",
+      "revision": "7f6908b7e1b95d971f4151bfaf2382e2ce9485cf",
+      "url": "https://github.com/HKUDS/Vibe-Trading/blob/7f6908b7e1b95d971f4151bfaf2382e2ce9485cf/agent/backtest/constraints.py",
+      "inspection": "selected material read; no runtime validation"
+    },
+    {
+      "repo": "HKUDS/Vibe-Trading",
+      "path": "agent/backtest/correlation.py",
+      "revision": "7f6908b7e1b95d971f4151bfaf2382e2ce9485cf",
+      "url": "https://github.com/HKUDS/Vibe-Trading/blob/7f6908b7e1b95d971f4151bfaf2382e2ce9485cf/agent/backtest/correlation.py",
+      "inspection": "selected material read; no runtime validation"
+    },
+    {
+      "repo": "Fincept-Corporation/FinceptTerminal",
+      "path": "fincept-qt/docs/backtesting-provider-process.md",
+      "revision": "3f444cb7ab712d85a57d270d5edd6e7a2ef50d55",
+      "url": "https://github.com/Fincept-Corporation/FinceptTerminal/blob/3f444cb7ab712d85a57d270d5edd6e7a2ef50d55/fincept-qt/docs/backtesting-provider-process.md",
+      "inspection": "selected material read; no runtime validation"
+    },
+    {
+      "repo": "wilsonfreitas/awesome-quant",
+      "path": "README.md",
+      "revision": "48e48a76b2054b5fe6eede6852ffef7783b992ce",
+      "url": "https://github.com/wilsonfreitas/awesome-quant/blob/48e48a76b2054b5fe6eede6852ffef7783b992ce/README.md",
+      "inspection": "selected material read; no runtime validation"
+    },
+    {
+      "repo": "mementum/backtrader",
+      "path": "samples/multidata-strategy/multidata-strategy-unaligned.py",
+      "revision": "b853d7c90b6721476eb5a5ea3135224e33db1f14",
+      "url": "https://github.com/mementum/backtrader/blob/b853d7c90b6721476eb5a5ea3135224e33db1f14/samples/multidata-strategy/multidata-strategy-unaligned.py",
+      "inspection": "selected material read; no runtime validation"
+    },
+    {
+      "repo": "QuantConnect/Lean",
+      "path": "Common/Data/Market/TradeBar.cs",
+      "revision": "705b9551be1aaa821c7f77896a7eb8fcd07b92ee",
+      "url": "https://github.com/QuantConnect/Lean/blob/705b9551be1aaa821c7f77896a7eb8fcd07b92ee/Common/Data/Market/TradeBar.cs",
+      "inspection": "selected material read; no runtime validation"
+    },
+    {
+      "repo": "stefan-jansen/machine-learning-for-trading",
+      "path": "06_strategy_definition/02_cv_foundations.py",
+      "revision": "07a170d957fa602ae27d0590e738b88a52ba94cd",
+      "url": "https://github.com/stefan-jansen/machine-learning-for-trading/blob/07a170d957fa602ae27d0590e738b88a52ba94cd/06_strategy_definition/02_cv_foundations.py",
+      "inspection": "selected material read; no runtime validation"
+    },
+    {
+      "repo": "nautechsystems/nautilus_trader",
+      "path": "docs/concepts/backtesting/bar-execution.md",
+      "revision": "aef5cbe8fee4ea0ffe7dfc57dbce19e1a8eb3082",
+      "url": "https://github.com/nautechsystems/nautilus_trader/blob/aef5cbe8fee4ea0ffe7dfc57dbce19e1a8eb3082/docs/concepts/backtesting/bar-execution.md",
+      "inspection": "selected material read; no runtime validation"
+    },
+    {
+      "repo": "quantopian/zipline",
+      "path": "zipline/finance/slippage.py",
+      "revision": "014f1fc339dc8b7671d29be2d85ce57d3daec343",
+      "url": "https://github.com/quantopian/zipline/blob/014f1fc339dc8b7671d29be2d85ce57d3daec343/zipline/finance/slippage.py",
+      "inspection": "selected material read; no runtime validation"
+    },
+    {
+      "repo": "polakowo/vectorbt",
+      "path": "examples/WalkForwardOptimization.ipynb",
+      "revision": "ceffc501f2d37033a79dd86a9f883e69ec6977bd",
+      "url": "https://github.com/polakowo/vectorbt/blob/ceffc501f2d37033a79dd86a9f883e69ec6977bd/examples/WalkForwardOptimization.ipynb",
+      "inspection": "selected material read; no runtime validation"
+    },
+    {
+      "repo": "kernc/backtesting.py",
+      "path": "backtesting/backtesting.py",
+      "revision": "ca2e2611621e472542ba90f7243a1fa06a7d7108",
+      "url": "https://github.com/kernc/backtesting.py/blob/ca2e2611621e472542ba90f7243a1fa06a7d7108/backtesting/backtesting.py",
+      "inspection": "selected material read; no runtime validation"
+    },
+    {
+      "repo": "ranaroussi/quantstats",
+      "path": "quantstats/stats.py",
+      "revision": "9ef4c6d0a4ffe7831f6ebba6a5824fd33a90c05a",
+      "url": "https://github.com/ranaroussi/quantstats/blob/9ef4c6d0a4ffe7831f6ebba6a5824fd33a90c05a/quantstats/stats.py",
+      "inspection": "selected material read; no runtime validation"
+    },
+    {
+      "repo": "openbq-org/OpenBB",
+      "path": "openbb_platform/core/openbb_core/provider/standard_models/equity_historical.py",
+      "revision": "ae0268771f761b036996d81bd21522ce79d95415",
+      "url": "https://github.com/openbq-org/OpenBB/blob/ae0268771f761b036996d81bd21522ce79d95415/openbb_platform/core/openbb_core/provider/standard_models/equity_historical.py",
+      "inspection": "selected material read; no runtime validation"
+    },
+    {
+      "repo": "openbq-org/OpenBB",
+      "path": "openbb_platform/core/openbb_core/provider/abstract/fetcher.py",
+      "revision": "ae0268771f761b036996d81bd21522ce79d95415",
+      "url": "https://github.com/openbq-org/OpenBB/blob/ae0268771f761b036996d81bd21522ce79d95415/openbb_platform/core/openbb_core/provider/abstract/fetcher.py",
+      "inspection": "selected material read; no runtime validation"
+    },
+    {
+      "repo": "freqtrade/freqtrade",
+      "path": "tests/strategy/strats/lookahead_bias/strategy_test_v3_with_lookahead_bias.py",
+      "revision": "a859a8f6e02133be0e291db685a5cb92438fb505",
+      "url": "https://github.com/freqtrade/freqtrade/blob/a859a8f6e02133be0e291db685a5cb92438fb505/tests/strategy/strats/lookahead_bias/strategy_test_v3_with_lookahead_bias.py",
+      "inspection": "selected material read; no runtime validation"
+    },
+    {
+      "repo": "HKUDS/Vibe-Trading",
+      "path": "agent/tests/test_constraints.py",
+      "revision": "7f6908b7e1b95d971f4151bfaf2382e2ce9485cf",
+      "url": "https://github.com/HKUDS/Vibe-Trading/blob/7f6908b7e1b95d971f4151bfaf2382e2ce9485cf/agent/tests/test_constraints.py",
+      "inspection": "selected material read; no runtime validation"
+    },
+    {
+      "repo": "Fincept-Corporation/FinceptTerminal",
+      "path": "fincept-qt/scripts/Analytics/backtesting/base/base_provider.py",
+      "revision": "3f444cb7ab712d85a57d270d5edd6e7a2ef50d55",
+      "url": "https://github.com/Fincept-Corporation/FinceptTerminal/blob/3f444cb7ab712d85a57d270d5edd6e7a2ef50d55/fincept-qt/scripts/Analytics/backtesting/base/base_provider.py",
+      "inspection": "selected material read; no runtime validation"
+    },
+    {
+      "repo": "QuantConnect/Lean",
+      "path": "Algorithm/Alphas/CompositeAlphaModel.cs",
+      "revision": "705b9551be1aaa821c7f77896a7eb8fcd07b92ee",
+      "url": "https://github.com/QuantConnect/Lean/blob/705b9551be1aaa821c7f77896a7eb8fcd07b92ee/Algorithm/Alphas/CompositeAlphaModel.cs",
+      "inspection": "selected material read; no runtime validation"
+    },
+    {
+      "repo": "QuantConnect/Lean",
+      "path": "Algorithm/Risk/CompositeRiskManagementModel.py",
+      "revision": "705b9551be1aaa821c7f77896a7eb8fcd07b92ee",
+      "url": "https://github.com/QuantConnect/Lean/blob/705b9551be1aaa821c7f77896a7eb8fcd07b92ee/Algorithm/Risk/CompositeRiskManagementModel.py",
+      "inspection": "selected material read; no runtime validation"
+    },
+    {
+      "repo": "quantopian/research_public",
+      "path": "notebooks/lectures/Hypothesis_Testing/notebook.ipynb",
+      "revision": "e183ecd093efbebce9b0febdc7d0253159c04061",
+      "url": "https://github.com/quantopian/research_public/blob/e183ecd093efbebce9b0febdc7d0253159c04061/notebooks/lectures/Hypothesis_Testing/notebook.ipynb",
+      "inspection": "selected material read; no runtime validation"
+    },
+    {
+      "repo": "QuantConnect/Tutorials",
+      "path": "05 Introduction to Financial Python[]/05 Pandas-Resampling and DataFrame/03 Resampling.html",
+      "revision": "4a341890296f7e79e095508f06170c72ccaa629c",
+      "url": "https://github.com/QuantConnect/Tutorials/blob/4a341890296f7e79e095508f06170c72ccaa629c/05%20Introduction%20to%20Financial%20Python%5B%5D/05%20Pandas-Resampling%20and%20DataFrame/03%20Resampling.html",
+      "inspection": "selected material read; no runtime validation"
+    },
+    {
+      "repo": "stefan-jansen/machine-learning-for-trading",
+      "path": "16_strategy_simulation/14_cost_sensitivity.py",
+      "revision": "07a170d957fa602ae27d0590e738b88a52ba94cd",
+      "url": "https://github.com/stefan-jansen/machine-learning-for-trading/blob/07a170d957fa602ae27d0590e738b88a52ba94cd/16_strategy_simulation/14_cost_sensitivity.py",
+      "inspection": "selected material read; no runtime validation"
+    },
+    {
+      "repo": "nickmccullum/algorithmic-trading-python",
+      "path": "finished_files/002_quantitative_momentum_strategy.ipynb",
+      "revision": "e1e3c2e586188a9222d3de61849cfeef29d3d28a",
+      "url": "https://github.com/nickmccullum/algorithmic-trading-python/blob/e1e3c2e586188a9222d3de61849cfeef29d3d28a/finished_files/002_quantitative_momentum_strategy.ipynb",
+      "inspection": "selected material read; no runtime validation"
+    },
+    {
+      "repo": "zoharbabin/quantum-trader",
+      "path": "training/courses/quantum-trading/course.json",
+      "revision": "3b2e37a02313e82ce9de67e33d518b3705d327d4",
+      "url": "https://github.com/zoharbabin/quantum-trader/blob/3b2e37a02313e82ce9de67e33d518b3705d327d4/training/courses/quantum-trading/course.json",
+      "inspection": "selected material read; no runtime validation"
+    },
+    {
+      "repo": "zoharbabin/quantum-trader",
+      "path": "training/src/engine/progress.js",
+      "revision": "3b2e37a02313e82ce9de67e33d518b3705d327d4",
+      "url": "https://github.com/zoharbabin/quantum-trader/blob/3b2e37a02313e82ce9de67e33d518b3705d327d4/training/src/engine/progress.js",
+      "inspection": "selected material read; no runtime validation"
+    },
+    {
+      "repo": "zoharbabin/quantum-trader",
+      "path": "training/courses/quantum-trading/content/tutorials/basic-risk.md",
+      "revision": "3b2e37a02313e82ce9de67e33d518b3705d327d4",
+      "url": "https://github.com/zoharbabin/quantum-trader/blob/3b2e37a02313e82ce9de67e33d518b3705d327d4/training/courses/quantum-trading/content/tutorials/basic-risk.md",
+      "inspection": "selected material read; no runtime validation"
+    },
+    {
+      "repo": "zoharbabin/quantum-trader",
+      "path": "training/courses/quantum-trading/content/exercises/technical-analysis-quiz.json",
+      "revision": "3b2e37a02313e82ce9de67e33d518b3705d327d4",
+      "url": "https://github.com/zoharbabin/quantum-trader/blob/3b2e37a02313e82ce9de67e33d518b3705d327d4/training/courses/quantum-trading/content/exercises/technical-analysis-quiz.json",
+      "inspection": "selected material read; no runtime validation"
+    },
+    {
+      "repo": "zoharbabin/quantum-trader",
+      "path": "src/trading/agents/risk_validator.py",
+      "revision": "3b2e37a02313e82ce9de67e33d518b3705d327d4",
+      "url": "https://github.com/zoharbabin/quantum-trader/blob/3b2e37a02313e82ce9de67e33d518b3705d327d4/src/trading/agents/risk_validator.py",
+      "inspection": "selected material read; no runtime validation"
+    },
+    {
+      "repo": "zoharbabin/quantum-trader",
+      "path": "tests/test_risk_validator.py",
+      "revision": "3b2e37a02313e82ce9de67e33d518b3705d327d4",
+      "url": "https://github.com/zoharbabin/quantum-trader/blob/3b2e37a02313e82ce9de67e33d518b3705d327d4/tests/test_risk_validator.py",
+      "inspection": "selected material read; no runtime validation"
+    },
+    {
+      "repo": "pst-group/pysystemtrade",
+      "path": "docs/backtesting.md",
+      "revision": "326b5d402c2825cc8561cabb899d1454e593bda9",
+      "url": "https://github.com/pst-group/pysystemtrade/blob/326b5d402c2825cc8561cabb899d1454e593bda9/docs/backtesting.md",
+      "inspection": "selected material read; no runtime validation"
+    },
+    {
+      "repo": "PyPortfolio/PyPortfolioOpt",
+      "path": "docs/RiskModels.rst",
+      "revision": "a6638d2e06dae6f444fd022cfd4b3c528902a85b",
+      "url": "https://github.com/PyPortfolio/PyPortfolioOpt/blob/a6638d2e06dae6f444fd022cfd4b3c528902a85b/docs/RiskModels.rst",
+      "inspection": "selected material read; no runtime validation"
+    },
+    {
+      "repo": "dcajasn/Riskfolio-Lib",
+      "path": "docs/source/riskfoliolib/risk.rst",
+      "revision": "7b1b26ac9760974c12ecefe290a9d3bd37b66b7a",
+      "url": "https://github.com/dcajasn/Riskfolio-Lib/blob/7b1b26ac9760974c12ecefe290a9d3bd37b66b7a/docs/source/riskfoliolib/risk.rst",
+      "inspection": "selected material read; no runtime validation"
+    },
+    {
+      "repo": "AI4Finance-Foundation/FinRL",
+      "path": "finrl/applications/stock_trading/ensemble_stock_trading.py",
+      "revision": "e60e26e4870f00fbc704c6297edfd9d81816b3d3",
+      "url": "https://github.com/AI4Finance-Foundation/FinRL/blob/e60e26e4870f00fbc704c6297edfd9d81816b3d3/finrl/applications/stock_trading/ensemble_stock_trading.py",
+      "inspection": "selected material read; no runtime validation"
+    },
+    {
+      "repo": "hummingbot/hummingbot",
+      "path": "hummingbot/strategy_v2/models/executor_actions.py",
+      "revision": "9af100d6822da7d2d0291a906c730ef172284ee2",
+      "url": "https://github.com/hummingbot/hummingbot/blob/9af100d6822da7d2d0291a906c730ef172284ee2/hummingbot/strategy_v2/models/executor_actions.py",
+      "inspection": "selected material read; no runtime validation"
+    },
+    {
+      "repo": "vnpy/vnpy",
+      "path": "docs/community/app/risk_manager.md",
+      "revision": "2ae433660477f9f6a10b0683603879e59072659f",
+      "url": "https://github.com/vnpy/vnpy/blob/2ae433660477f9f6a10b0683603879e59072659f/docs/community/app/risk_manager.md",
+      "inspection": "selected material read; no runtime validation"
+    },
+    {
+      "repo": "nkaz001/hftbacktest",
+      "path": "docs/order_fill.rst",
+      "revision": "5f3ec40b2afb764e0fea112f941ed85523ef4e88",
+      "url": "https://github.com/nkaz001/hftbacktest/blob/5f3ec40b2afb764e0fea112f941ed85523ef4e88/docs/order_fill.rst",
+      "inspection": "selected material read; no runtime validation"
+    },
+    {
+      "repo": "stefan-jansen/alphalens-reloaded",
+      "path": "src/alphalens/performance.py",
+      "revision": "f0a07c22d554e4b4036983cc80320b432714fe7e",
+      "url": "https://github.com/stefan-jansen/alphalens-reloaded/blob/f0a07c22d554e4b4036983cc80320b432714fe7e/src/alphalens/performance.py",
+      "inspection": "selected material read; no runtime validation"
+    },
+    {
+      "repo": "TradeMaster-NTU/TradeMaster",
+      "path": "trademaster/environments/portfolio_management/environment.py",
+      "revision": "1747cc18db3fe2639af12defc80e138c51a625c0",
+      "url": "https://github.com/TradeMaster-NTU/TradeMaster/blob/1747cc18db3fe2639af12defc80e138c51a625c0/trademaster/environments/portfolio_management/environment.py",
+      "inspection": "Selected source read; external tests not run"
+    },
+    {
+      "repo": "TradeMaster-NTU/TradeMaster",
+      "path": "trademaster/evaluation/market_dynamics_labeling/PRUDEX_README.MD",
+      "revision": "1747cc18db3fe2639af12defc80e138c51a625c0",
+      "url": "https://github.com/TradeMaster-NTU/TradeMaster/blob/1747cc18db3fe2639af12defc80e138c51a625c0/trademaster/evaluation/market_dynamics_labeling/PRUDEX_README.MD",
+      "inspection": "Selected documentation read; external tests not run"
+    },
+    {
+      "repo": "QuantConnect/Lean",
+      "path": "Algorithm.Python/BaseFrameworkRegressionAlgorithm.py",
+      "revision": "705b9551be1aaa821c7f77896a7eb8fcd07b92ee",
+      "url": "https://github.com/QuantConnect/Lean/blob/705b9551be1aaa821c7f77896a7eb8fcd07b92ee/Algorithm.Python/BaseFrameworkRegressionAlgorithm.py",
+      "inspection": "Lesson 1 framework trace; selected implementation sections read; upstream suites not run"
+    },
+    {
+      "repo": "QuantConnect/Lean",
+      "path": "Algorithm.Python/EmaCrossAlphaModelFrameworkRegressionAlgorithm.py",
+      "revision": "705b9551be1aaa821c7f77896a7eb8fcd07b92ee",
+      "url": "https://github.com/QuantConnect/Lean/blob/705b9551be1aaa821c7f77896a7eb8fcd07b92ee/Algorithm.Python/EmaCrossAlphaModelFrameworkRegressionAlgorithm.py",
+      "inspection": "Lesson 1 framework trace; selected implementation sections read; upstream suites not run"
+    },
+    {
+      "repo": "QuantConnect/Lean",
+      "path": "Algorithm.Framework/Alphas/EmaCrossAlphaModel.py",
+      "revision": "705b9551be1aaa821c7f77896a7eb8fcd07b92ee",
+      "url": "https://github.com/QuantConnect/Lean/blob/705b9551be1aaa821c7f77896a7eb8fcd07b92ee/Algorithm.Framework/Alphas/EmaCrossAlphaModel.py",
+      "inspection": "Lesson 1 framework trace; selected implementation sections read; upstream suites not run"
+    },
+    {
+      "repo": "QuantConnect/Lean",
+      "path": "Algorithm.Framework/Portfolio/EqualWeightingPortfolioConstructionModel.py",
+      "revision": "705b9551be1aaa821c7f77896a7eb8fcd07b92ee",
+      "url": "https://github.com/QuantConnect/Lean/blob/705b9551be1aaa821c7f77896a7eb8fcd07b92ee/Algorithm.Framework/Portfolio/EqualWeightingPortfolioConstructionModel.py",
+      "inspection": "Lesson 1 framework trace; selected implementation sections read; upstream suites not run"
+    },
+    {
+      "repo": "QuantConnect/Lean",
+      "path": "Algorithm/Execution/ImmediateExecutionModel.py",
+      "revision": "705b9551be1aaa821c7f77896a7eb8fcd07b92ee",
+      "url": "https://github.com/QuantConnect/Lean/blob/705b9551be1aaa821c7f77896a7eb8fcd07b92ee/Algorithm/Execution/ImmediateExecutionModel.py",
+      "inspection": "Lesson 1 framework trace; selected implementation sections read; upstream suites not run"
+    },
+    {
+      "repo": "QuantConnect/Lean",
+      "path": "Tests/Algorithm/Framework/Alphas/EmaCrossAlphaModelTests.cs",
+      "revision": "705b9551be1aaa821c7f77896a7eb8fcd07b92ee",
+      "url": "https://github.com/QuantConnect/Lean/blob/705b9551be1aaa821c7f77896a7eb8fcd07b92ee/Tests/Algorithm/Framework/Alphas/EmaCrossAlphaModelTests.cs",
+      "inspection": "Lesson 1 framework trace; selected implementation sections read; upstream suites not run"
+    },
+    {
+      "repo": "QuantConnect/Lean",
+      "path": "Common/Orders/Fills/EquityFillModel.cs",
+      "revision": "705b9551be1aaa821c7f77896a7eb8fcd07b92ee",
+      "url": "https://github.com/QuantConnect/Lean/blob/705b9551be1aaa821c7f77896a7eb8fcd07b92ee/Common/Orders/Fills/EquityFillModel.cs",
+      "inspection": "Lesson 1 framework trace; selected implementation sections read; upstream suites not run"
+    },
+    {
+      "repo": "QuantConnect/Lean",
+      "path": "Common/Orders/Fees/ConstantFeeModel.cs",
+      "revision": "705b9551be1aaa821c7f77896a7eb8fcd07b92ee",
+      "url": "https://github.com/QuantConnect/Lean/blob/705b9551be1aaa821c7f77896a7eb8fcd07b92ee/Common/Orders/Fees/ConstantFeeModel.cs",
+      "inspection": "Lesson 1 framework trace; selected implementation sections read; upstream suites not run"
+    },
+    {
+      "repo": "QuantConnect/Lean",
+      "path": "Tests/Algorithm/Framework/Execution/ImmediateExecutionModelTests.cs",
+      "revision": "705b9551be1aaa821c7f77896a7eb8fcd07b92ee",
+      "url": "https://github.com/QuantConnect/Lean/blob/705b9551be1aaa821c7f77896a7eb8fcd07b92ee/Tests/Algorithm/Framework/Execution/ImmediateExecutionModelTests.cs",
+      "inspection": "Lesson 1 framework trace; selected implementation sections read; upstream suites not run"
+    }
+  ]
+}

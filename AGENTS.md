@@ -67,3 +67,51 @@ Each meaningful experiment should record enough information to reproduce:
 ## Human responsibility
 
 AI can implement, explain and critique. The human remains responsible for accepting financial assumptions, interpreting evidence and deciding whether anything progresses toward paper or live trading.
+
+
+## Open-source benchmark check for every implementation
+
+Before implementing or materially changing a Quant Lab capability, inspect the relevant implementation patterns in these established public projects:
+
+1. `QuantConnect/Lean`
+2. `nautechsystems/nautilus_trader`
+3. `quantopian/zipline`
+4. `polakowo/vectorbt`
+5. `kernc/backtesting.py`
+
+Use `ranaroussi/quantstats` as an additional specialist reference when the work concerns performance analytics, risk metrics or tear sheets.
+
+### Required workflow
+
+1. Identify which parts of the current issue/lesson have analogues in the benchmark repositories.
+2. Inspect their current public implementation and documentation, not only their README.
+3. Extract useful domain concepts, invariants, API boundaries, testing patterns and failure cases.
+4. Compare those findings with the current Quant Lab design before coding.
+5. Add a missing concept only when it materially improves correctness, reproducibility, safety, testability or the learning objective.
+6. Implement the **smallest Quant Lab-specific version** that satisfies the current lesson. Do not copy framework complexity merely because a mature project contains it.
+7. Keep Quant Lab's existing architectural rules authoritative: canonical internal models, explicit time, vendor isolation, deterministic tests, experiment identity and gated execution.
+8. Record meaningful borrowed design ideas or deviations in the issue/PR when they affect architecture or behavior.
+9. Never copy source code blindly. Understand the pattern, implement it for Quant Lab, and respect upstream licenses/attribution requirements.
+10. If the five projects disagree, prefer the simplest approach that preserves correctness for the current milestone; document a consequential trade-off.
+
+The benchmark check is a **design review gate, not a dependency requirement**. Quant Lab should remain intentionally smaller and easier to understand than these frameworks.
+
+
+## LEAN integration and lesson trace rule
+
+LEAN is an external engine dependency, not source to paste into Quant Lab. The authoritative pin is `integrations/lean/lean.lock.json`.
+
+For every lesson that maps to LEAN:
+
+1. Inspect the pinned commit, not moving `master`.
+2. Trace the relevant public algorithm API into the engine/framework implementation, tests and example algorithms.
+3. Record the financial meaning, information timing, state transitions, assumptions and failure modes—not merely class names.
+4. Build the smallest original Quant Lab example that demonstrates the concept.
+5. Compare the hand-checkable Quant Lab result with LEAN behavior before paper eligibility.
+6. Explain differences in fills, fees, slippage, warm-up, normalization, portfolio accounting or statistics.
+7. Link exact upstream paths at the pinned SHA so lesson evidence remains reproducible.
+8. Do not copy community/forum algorithms unless their licence is independently verified.
+9. If LEAN code is copied or modified, preserve headers, mark modifications, and update `THIRD_PARTY_NOTICES.md` and the vendored Apache licence material.
+10. Treat QuantConnect data, cloud services, names and marks as separate from the Apache-licensed engine.
+
+Changing the LEAN pin requires reviewing upstream changes, running adapter/contract tests and recording migration notes.

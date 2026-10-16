@@ -129,6 +129,18 @@ Trend/mean-reversion, volatility and risk-off states; rule-based baseline first,
 ### Lesson 23 — ML foundations for trading
 Targets/labels, feature timing, leakage, class imbalance, probabilistic predictions, calibration and time-aware validation. Compare every ML model to simple baselines.
 
+### Advanced case study after Lesson 23 — Kronos financial foundation model
+
+Study OHLC(V/amount) tokenization and autoregressive forecasting; preserve sampled future paths, measure calibration and translate forecasts into a falsifiable signal evaluated in LEAN. Prerequisites: data/timing, costs/risk, walk-forward validation and experiment identity (Lessons 1–3, 14–18, 23).
+
+**Pinned source:** [shiyu-coder/Kronos@67b630e67f6a18c9e9be918d9b4337c960db1e9a](https://github.com/shiyu-coder/Kronos/tree/67b630e67f6a18c9e9be918d9b4337c960db1e9a), latest `master` commit checked 2026-10-07, committed 2026-04-13 12:38:49 UTC. No GitHub releases were published at the check; this is an immutable source snapshot. Pin model and tokenizer weights separately before execution.
+
+**Build progressively:** source-study lesson -> optional offline inference adapter -> retained paths and probabilistic evaluation -> costed LEAN experiment -> separate paper review. Start with small, one asset/timeframe and bounded horizons. Upstream `sample_count > 1` averages paths, so retain individual seeded draws before computing percentiles. Kronos is a model dependency; the v1 financial connectors remain IBKR + QuantConnect.
+
+**Exit:** demonstrate admissible information timing, benchmark comparison, interval coverage, untouched holdout, cost sensitivity, pretraining-overlap limitations and reproducible provenance. No automatic paper/live promotion.
+
+**Detailed design and acceptance criteria:** [Kronos integration plan](docs/kronos-integration-plan.md). This case study is planned; no inference/runtime capability is enabled by the documentation change.
+
 ### Lesson 24 — Strategy selection / meta-models
 Use observable state to allocate among already validated strategies. LLMs do not directly decide prices/orders.
 
@@ -218,3 +230,20 @@ Tabs are unlocked by course capabilities rather than all being built upfront:
 V1 external financial-platform connectors are **IBKR + QuantConnect only**. Additional providers are intentionally out of scope until there is a demonstrated need.
 
 This order deliberately makes understanding and measurement prerequisites for automation.
+
+
+## LEAN integration track across the roadmap
+
+LEAN is introduced incrementally rather than deferred to the final integration lesson:
+
+- **Lessons 1–3:** trace bars, subscriptions, time, returns, fills, fees, slippage, portfolio accounting and statistics; retain the small Python simulator as a hand-checkable oracle.
+- **Lessons 4–14:** express strategies through LEAN's Algorithm Framework where its separation fits: Universe -> Alpha -> Portfolio Construction -> Risk -> Execution. Use classic/hybrid algorithms when the finance logic cannot be separated honestly.
+- **Lessons 15–18:** run reproducible LEAN experiments and normalize orders, fills, equity, drawdown, costs and statistics into the Quant Lab experiment contract.
+- **Lessons 25–30:** add the supervised LEAN runtime adapter, IBKR paper integration, reconciliation, monitoring and kill controls.
+- **Live stages:** reuse the validated strategy/run contract; live remains disabled by default and requires an explicit promotion decision.
+
+The immutable initial upstream snapshot is `80e7843f645673bcbeaab963049f76f20f6785e1` (2026-10-06). A pin update is a dedicated reviewed change with contract tests and migration notes.
+
+## Optional financial intelligence / MCP track (prerequisite-gated)
+
+After canonical data/timing foundations, study read-only MCP adapters for news and fundamentals, initially with synthetic fixtures and offline contract tests. Evaluate AI-derived news features only through chronological, cost-aware research before paper use. LSEG is an optional future provider subject to server-license, data-entitlement and pricing verification; no new v1 financial-platform connector or execution capability is approved. See [MCP financial intelligence plan](docs/mcp-financial-intelligence-plan.md).
