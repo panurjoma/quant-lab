@@ -421,3 +421,7 @@ See `docs/adr/0001-lean-execution-engine.md` for consequences and rollout.
 Kronos is an optional isolated Python inference dependency producing versioned forecast artifacts. It does not change the two v1 financial connectors or LEAN's execution responsibility. Canonical completed bars and an explicit information cutoff enter the adapter; retained sampled paths and provenance leave it. Original signal rules, portfolio construction and independent risk controls translate forecasts into LEAN experiments. React renders the results. Model loading stays outside engine event callbacks, and forecast availability includes declared inference latency.
 
 The [Kronos integration plan](docs/kronos-integration-plan.md) records the immutable source pin, separate checkpoint-version requirements, sampling API caveat, validation protocol and staged rollout. No runtime module or new dependency is introduced until the advanced lesson requires it.
+
+## Optional MCP financial intelligence (future)
+
+Read-only MCP adapters may later ingest licensed news and fundamentals into point-in-time canonical snapshots before strategy decisions. MCP is open tooling; LSEG data is not assumed free. This does not expand the two v1 financial-platform connectors. See [MCP financial intelligence plan](docs/mcp-financial-intelligence-plan.md) for provider ports, provenance, availability-time controls, licensing gates and safety boundaries.
